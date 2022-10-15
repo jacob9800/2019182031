@@ -1,20 +1,11 @@
 from pico2d import *
 import game_framework
-
-class Map:
-    def __init__(self):
-        self.background = load_image('background.png')
-        self.tile = load_image('tile.png')
-        self.background_city = load_image('city.png')
-        self.mapsize = 1000
-    def draw(self):
-        self.background.draw(self.mapsize/2,300)
-        self.background_city.draw(self.mapsize/2, 120)
-        self.tile.draw(self.mapsize/2, 220)
+import random
+import GameMap
 
 class Player:
     def __init__(self):
-        self.x, self.y = 400, 90 # 플레이어 좌표
+        self.x, self.y = 800, 90 # 플레이어 좌표
         self.moving_frame = 0 # 이동 시 프레임
         self.idle_frame = 0 # 정지 시 프레임
         self.dir = 1  # 1: 오른쪽, -1: 왼쪽
@@ -25,12 +16,11 @@ class Player:
 
     def update(self):
         self.moving_frame = (self.moving_frame + 1) % 6
-        self.idle_frame = (self.idle_frame + 1) % 5
+        self.idle_frame = (self.idle_frame + 1) % 1
 
         if self.idle == 1:
-            self.x += self.dir * 1
-        elif self.idle == 0:
-            pass
+            self.x += self.dir
+
         if self.x > gamemap.mapsize:
             self.x = gamemap.mapsize
         elif self.x < 0:
@@ -45,10 +35,39 @@ class Player:
         elif self.idle == 0:
             if self.dir == 1:
                 self.right_image.clip_draw(self.idle_frame*167, 546, 166, 190, self.x, self.y)
-                delay(0.2)
             else:
                 self.left_image.clip_draw((self.idle_frame+7)*167, 546, 166, 190, self.x, self.y)
-                delay(0.2)
+
+class NormalZombie:
+    def __init__(self):
+        self.zx, self.zy = 0, 40  # 좀비 좌표
+        self.zmoving_frame = 0  # 이동 시 프레임
+        self.zdir = 1  # 1: 오른쪽, -1: 왼쪽
+        self.idle = 2
+        self.hp = 50  # 좀비 HP, 0이 될 경우 사망 애니메이션 출력
+        self.right_image = load_image('zombie_sheet.png')
+        self.left_image = load_image('zombie_sheet_2.png')
+
+    def update(self):
+        self.zmoving_frame = (self.zmoving_frame + 1) % 6
+
+        print(self.zx)
+
+        if self.zx > gamemap.mapsize:
+            self.zx = gamemap.mapsize
+            self.zdir = -1
+        elif self.zx < 0:
+            self.zx = 0
+            self.zdir = 1
+        else:
+
+                self.zx += self.zdir / 2  # 플레이어의 x 좌표에 따라서 이동 방향 변경
+
+    def draw(self):
+        if self.zdir == 1:
+            self.right_image.clip_draw(self.zmoving_frame * 177, 0, 167, 220, self.zx, self.zy)
+        elif self.zdir == -1:
+            self.left_image.clip_draw((self.zmoving_frame+6) * 190, 0, 167, 220, self.zx, self.zy)
 
 def handle_events():
     global running
@@ -68,31 +87,40 @@ def handle_events():
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
                 player.idle = 0
-                player.dir = 1
             elif event.key == SDLK_LEFT:
                 player.idle = 0
-                player.dir = -1
-
-
 
 
 player = None
 gamemap = None
 running = True
+n_zombie = None
 
 def enter():
-    global player, gamemap, running
+    global player, gamemap, n_zombie, running
+    gamemap = GameMap.Map()
     player = Player()
-    gamemap = Map()
+    n_zombie = NormalZombie()
+
     running = True
 
 # 게임 종료 함수
 def exit():
-    global player, gamemap
-    del player, gamemap
+    global player, gamemap, n_zombie
+    del player, gamemap, n_zombie
 
 def update():
     player.update()
+    n_zombie.update()
+    dirchange()
+
+def dirchange():
+    if player.x > n_zombie.zx:
+        n_zombie.zdir = 1
+        print("Yes")
+    elif player.x < n_zombie.zx:
+        n_zombie.zdir = -1
+        print("no")
 
 
 def draw():
@@ -104,7 +132,7 @@ def draw():
 def draw_world():
     gamemap.draw()
     player.draw()
-
+    n_zombie.draw()
 
 def pause():
     pass
