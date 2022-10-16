@@ -6,7 +6,7 @@ class Map:
         self.background = load_image('background.png')
         self.tile = load_image('tile.png')
         self.background_city = load_image('city.png')
-        self.mapsize = 1500
+        self.mapsize = 1000
     def draw(self):
         self.background.draw(self.mapsize/2,300)
         self.background_city.draw(self.mapsize/2, 120)
