@@ -25,6 +25,8 @@ class Player:
 
         if self.idle == 1:
             self.x += self.dir * 10
+        else:
+            pass
 
         if self.x > gamemap.mapsize:
             self.x = gamemap.mapsize
@@ -126,7 +128,7 @@ def handle_events():
             if event.key == SDLK_LEFT:
                 player.idle = 0
             if event.key == SDLK_SPACE:
-                player.idle = 1
+                player.idle = 0
                 player.attack = 0
 
 
