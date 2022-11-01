@@ -1,9 +1,11 @@
 from pico2d import *
 import game_framework
+import pause_state
 import random
 import GameMap
 from playerclass import Player
 from zombieclass import NormalZombie
+import game_over_state
 
 def handle_events():
     global running
@@ -23,6 +25,9 @@ def handle_events():
             if event.key == SDLK_SPACE:
                 player.idle = 0
                 player.attack = 1
+            if event.key == SDLK_p:
+                pass
+                # game_framework.push_state(pause_state)
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
                 player.idle = 0
@@ -59,6 +64,8 @@ def update():
         zombie.dirchange(player)
         zombie.collide(player)
         zombie.deathcheck()
+    if player.hp <= 0:
+        game_framework.change_state(game_over_state)
 
 
 

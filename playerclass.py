@@ -1,6 +1,8 @@
 from pico2d import *
 import play_state
 import time
+import game_over_state
+import game_framework
 
 class Player:
     def __init__(self):
@@ -12,7 +14,7 @@ class Player:
         self.dir = 1  # 1: 오른쪽, -1: 왼쪽
         self.idle = 0 # 0: 정지 상태, 1: 이동 상태
         self.attack = 0 # 0: 대기 상태, 1: 근공 실행
-        self.hp = 100 # 플레이어 HP, 0이 될 경우 패배창 출력
+        self.hp = 10 # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0 # 0일시 피격 가능, 1일시 무적 상태
         self.right_image = load_image('player_right_run.png')
         self.left_image = load_image('player_left_run.png')
