@@ -8,13 +8,14 @@ class Player:
     def __init__(self):
         self.x, self.y = 500, 90 # 플레이어 좌표
         self.hit_time = 0 # 피격당한 시간
-        self.current_time = 0
+        self.current_time = 0 # 실시간 캐릭터 시간
         self.moving_frame = 0 # 이동 시 프레임
         self.idle_frame = 0 # 정지 시 프레임
         self.dir = 1  # 1: 오른쪽, -1: 왼쪽
         self.idle = 0 # 0: 정지 상태, 1: 이동 상태
         self.attack = 0 # 0: 대기 상태, 1: 근공 실행
-        self.hp = 10 # 플레이어 HP, 0이 될 경우 패배창 출력
+        self.shoot = 0 # 0: 무기 없음, 1: 발사
+        self.hp = 100 # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0 # 0일시 피격 가능, 1일시 무적 상태
         self.right_image = load_image('player_right_run.png')
         self.left_image = load_image('player_left_run.png')
@@ -62,7 +63,7 @@ class Player:
     def melee_attack(self, zombie):
         if self.x <= zombie.zx + 100 and zombie.zx - 100 <= self.x and self.attack == 1:
             if self.idle_frame == 2:
-                 zombie.hp -= 30
+                 zombie.hp -= 15
                  if self.dir == 1:
                      zombie.zx += 90
                  elif self.dir == -1:
