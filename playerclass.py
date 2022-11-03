@@ -64,6 +64,7 @@ class Player:
         if self.x <= zombie.zx + 100 and zombie.zx - 100 <= self.x and self.attack == 1:
             if self.idle_frame == 2:
                  zombie.hp -= 15
+                 zombie.hit = 1
                  if self.dir == 1:
                      zombie.zx += 90
                  elif self.dir == -1:

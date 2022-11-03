@@ -73,7 +73,7 @@ n_zombie = None
 tennisball = None
 bulletmod = 0
 cola = None
-tennis_mag = 7
+tennis_mag = 30
 cola_mag = 7
 killcount = 0
 
@@ -81,7 +81,7 @@ def enter():
     global player, gamemap, n_zombie, running, tennisball, cola
     gamemap = GameMap.Map()
     player = Player()
-    n_zombie = [NormalZombie() for i in range (1)]
+    n_zombie = []
     tennisball = []
     cola = []
 
@@ -127,11 +127,11 @@ def draw_world():
     player.draw()
     for zombie in n_zombie:
         zombie.draw()
+    delay(0.03)
     for ball in tennisball:
         ball.draw()
     for bottle in cola:
         bottle.draw()
-    delay(0.03)
 
 def pause():
     pass

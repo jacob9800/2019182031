@@ -13,7 +13,7 @@ class NormalZombie:
     ldead_image = None
     blood_image = None
     def __init__(self):
-        self.zx, self.zy = 1000, 100  # 좀비 좌표
+        self.zx, self.zy = 0.0, 100.0  # 좀비 좌표
         self.dead_time = 0 # 사망 시간
         self.hit_time = 0 # 피격 시간
         self.current_time = 0 # 좀비 현재 시간
@@ -25,7 +25,7 @@ class NormalZombie:
         self.zdir = 1  # 1: 오른쪽, -1: 왼쪽
         self.idle = 1  # 1: 이동, 0: 정지
         self.attack = 0  # 0: 무반응, 1: 공격
-        self.dead = 0 # 0: 생존, 1: 사망
+        self.dead = 0 # 0: 생존, 1: 사망, 2: 사망(삭제 필요)
         self.speed = random.randint(300,500) / 100
         self.hp = 50  # 좀비 HP, 0이 될 경우 사망 애니메이션 출력
         if NormalZombie.right_image == None:
@@ -57,7 +57,7 @@ class NormalZombie:
             self.zdir = 1
         else:
             if self.idle == 1:
-                self.zx += self.zdir * self.speed # 플레이어의 x 좌표에 따라서 이동 방향 변경
+                self.zx += float(self.zdir * self.speed) # 플레이어의 x 좌표에 따라서 이동 방향 변경
             else:
                 pass
 
@@ -75,8 +75,8 @@ class NormalZombie:
                 else :
                     self.rdead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
                 if (self.current_time - self.dead_time >= 1):
-                    play_state.n_zombie.pop(-1)
-                    self.counter = 0
+                    self.dead = 2
+                    print(play_state.killcount, "번 좀비 사망")
         elif self.zdir == -1:
             if self.dead == 0:
                 if self.attack == 0:
@@ -90,21 +90,20 @@ class NormalZombie:
                 else:
                     self.ldead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
                 if (self.current_time - self.dead_time >= 1):
-                    play_state.n_zombie.pop(-1)
-                    self.counter = 0
+                    self.dead = 2
+                    print(play_state.killcount, "번 좀비 사망")
 
-            if self.hit == 1 and self.dead == 0:
-                if self.current_time - self.hit_time <= 0.3:
-                    self.blood_image.clip_draw(self.blood_frame * 137,0,137,68,self.zx,self.zy) # 피격시 출혈 효과 발생
-                else:
-                    self.hit_time = 0
-                    self.hit = 0
+        if self.hit == 1 and self.dead == 0:
+            if self.current_time - self.hit_time <= 0.3:
+                self.blood_image.clip_draw(self.blood_frame * 137, 0, 137, 68, self.zx, self.zy)  # 피격시 출혈 효과 발생
+            else:
+                self.hit = 0
 
 
     def dirchange(self,player):
-        if player.x > self.zx:
+        if player.x > self.zx and self.dead == 0:
             self.zdir = 1
-        elif player.x < self.zx:
+        elif player.x < self.zx and self.dead == 0:
             self.zdir = -1
 
     def collide(self, player):
@@ -126,9 +125,9 @@ class NormalZombie:
 
     def deathcheck(self):
         if self.hp <= 0 and self.dead == 0:
-            self.dead_time = get_time()
-            self.idle = 0
             self.dead = 1
+            self.idle = 0
+            self.dead_time = get_time()
             play_state.killcount += 1
             print("킬 카운트 : ",play_state.killcount)
         else:

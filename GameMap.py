@@ -17,9 +17,7 @@ class Map:
 
     def stage(self):
         if play_state.killcount <= 100:
-            if self.counter < 1:
+            if len(play_state.n_zombie) < 2:
+                play_state.n_zombie.append(NormalZombie())
 
-                for i in range(10):
-                    play_state.n_zombie.append(NormalZombie())
-                    self.counter += 1
 
