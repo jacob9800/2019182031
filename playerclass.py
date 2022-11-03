@@ -61,13 +61,16 @@ class Player:
                     self.lmelee_image.clip_draw(self.idle_frame*123, 0, 123, 160, self.x, self.y)
 
     def melee_attack(self, zombie):
-        if self.x <= zombie.zx + 100 and zombie.zx - 100 <= self.x and self.attack == 1:
+        if (self.x + 100 >= zombie.zx >= self.x and self.dir == 1) or (self.dir == -1 and self.x - 100 <= zombie.zx <= self.x) and self.attack == 1:
             if self.idle_frame == 2:
                  zombie.hp -= 15
-                 zombie.hit = 1
-                 if self.dir == 1:
-                     zombie.zx += 90
-                 elif self.dir == -1:
-                     zombie.zx -= 90
+                 if self.dir == 1 and zombie.dead == 0:
+                     zombie.hit = 1
+                     zombie.hit_time = get_time()
+                     zombie.zx += 50
+                 elif self.dir == -1 and zombie.dead == 0:
+                     zombie.hit = 1
+                     zombie.hit_time = get_time()
+                     zombie.zx -= 50
                  print(zombie.hp)
 

@@ -61,6 +61,21 @@ class NormalZombie:
             else:
                 pass
 
+        if self.hp <= 0 and self.dead == 0: # 좀비 사망 감지 코드
+            self.dead = 1
+            self.idle = 0
+            self.dead_time = get_time()
+            play_state.killcount += 1
+            print("킬 카운트 : ",play_state.killcount)
+
+        if (self.current_time - self.dead_time >= 1) and self.dead == 1: # 사망 1초 경과시 화면에서 제거 후 삭제 대기 상태로 전환
+            self.dead = 2
+            print(play_state.killcount, "번 좀비 사망")
+
+        if self.dead == 2: # 삭제 대기 중인 객체 확인 후 제거
+            play_state.n_zombie.remove(self)
+            del self
+
     def draw(self):
         if self.zdir == 1:
             if self.dead == 0:
@@ -74,9 +89,7 @@ class NormalZombie:
                     self.counter += 1
                 else :
                     self.rdead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
-                if (self.current_time - self.dead_time >= 1):
-                    self.dead = 2
-                    print(play_state.killcount, "번 좀비 사망")
+
         elif self.zdir == -1:
             if self.dead == 0:
                 if self.attack == 0:
@@ -89,9 +102,6 @@ class NormalZombie:
                     self.counter += 1
                 else:
                     self.ldead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
-                if (self.current_time - self.dead_time >= 1):
-                    self.dead = 2
-                    print(play_state.killcount, "번 좀비 사망")
 
         if self.hit == 1 and self.dead == 0:
             if self.current_time - self.hit_time <= 0.3:
@@ -123,12 +133,4 @@ class NormalZombie:
         else:
             pass
 
-    def deathcheck(self):
-        if self.hp <= 0 and self.dead == 0:
-            self.dead = 1
-            self.idle = 0
-            self.dead_time = get_time()
-            play_state.killcount += 1
-            print("킬 카운트 : ",play_state.killcount)
-        else:
-            pass
+

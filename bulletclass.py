@@ -19,13 +19,13 @@ class Tennis:
     def update(self):
         self.x += self.dir * self.speed
 
-
     def draw(self):
         self.tennis_image.draw(self.x, self.y)
 
     def collide(self, zombie):
-        if zombie.zx - 20 <= self.x + 20 and self.x - 20 <= zombie.zx + 20 and play_state.tennis_mag >= 1 and zombie.dead == 0:
-            play_state.tennisball.pop(0)
+        if zombie.zx - 20 <= self.x + 20 and self.x - 20 <= zombie.zx + 20 and play_state.tennis_mag >= 0 and zombie.dead == 0:
+            play_state.tennisball.remove(self)
+            del self
             zombie.hp -= 20
             zombie.hit = 1
             zombie.hit_time = get_time()
@@ -62,8 +62,9 @@ class Cola:
             self.coke_r_image.draw(self.x, self.y)
 
     def collide(self, zombie):
-        if zombie.zx - 40 <= self.x <= zombie.zx + 40 and play_state.cola_mag >= 1 and zombie.dead == 0:
-            play_state.cola.pop(0)
+        if zombie.zx - 40 <= self.x <= zombie.zx + 40 and play_state.cola_mag >= 0 and zombie.dead == 0:
+            play_state.cola.remove(self)
+            del self
             zombie.hp -= 5
             zombie.hit = 1
             zombie.hit_time = get_time()

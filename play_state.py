@@ -40,7 +40,7 @@ def handle_events():
                     else :
                         print("총알 없음!")
                 elif bulletmod == 1:
-                    if cola_mag > 0 :
+                    if cola_mag > 0:
                         cola.append(Cola()) # 콜라 1발 생성
                         cola_mag -= 1
                     else :
@@ -102,11 +102,10 @@ def update():
         bottle.update()
 
     for zombie in n_zombie:
-        player.melee_attack(zombie)
         zombie.update()
         zombie.dirchange(player)
         zombie.collide(player)
-        zombie.deathcheck()
+        player.melee_attack(zombie)
         for ball in tennisball:
             ball.collide(zombie)
         for bottle in cola:
