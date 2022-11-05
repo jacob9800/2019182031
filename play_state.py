@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import pause_state
+import game_over_state
 import random
 import GameMap
 import time
@@ -8,7 +9,7 @@ from playerclass import Player
 from zombieclass import NormalZombie
 from bulletclass import Tennis
 from bulletclass import Cola
-import game_over_state
+
 
 def handle_events():
     global running, tennis_mag, cola_mag, bulletmod
@@ -29,8 +30,7 @@ def handle_events():
                 player.idle = 0
                 player.attack = 1
             if event.key == SDLK_p:
-                pass
-                # game_framework.push_state(pause_state)
+                game_framework.push_state(pause_state)
             if event.key == SDLK_c:
                 player.shoot = 1
                 if bulletmod == 0: # 탄환 종류 선택

@@ -8,7 +8,7 @@ logo_time = 0.0
 
 def enter():
     global image
-    image = load_image('item_select.png')
+    image = load_image('pausescreen.png')
     pass
 
 def exit():
@@ -22,7 +22,7 @@ def update():
 def draw():
    clear_canvas()
    play_state.draw_world()
-   image.draw(400,300)
+   image.draw(500,300)
    update_canvas()
    pass
 
@@ -35,3 +35,5 @@ def handle_events():
             match event.key:
                 case pico2d.SDLK_ESCAPE:
                     game_framework.change_state(title_state)
+                case pico2d.SDLK_p:
+                    game_framework.pop_state()
