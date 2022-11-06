@@ -17,12 +17,12 @@ class Player:
         self.shoot = 0 # 0: 무기 없음, 1: 발사
         self.hp = 100 # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0 # 0일시 피격 가능, 1일시 무적 상태
-        self.right_image = load_image('player_right_run.png')
-        self.left_image = load_image('player_left_run.png')
-        self.ridle_image = load_image('player_right_idle.png')
-        self.lidle_image = load_image('player_left_idle.png')
-        self.rmelee_image = load_image('player_right_melee.png')
-        self.lmelee_image = load_image('player_left_melee.png')
+        self.right_image = load_image('Sprites/Player/player_right_run.png')
+        self.left_image = load_image('Sprites/Player/player_left_run.png')
+        self.ridle_image = load_image('Sprites/Player/player_right_idle.png')
+        self.lidle_image = load_image('Sprites/Player/player_left_idle.png')
+        self.rmelee_image = load_image('Sprites/Player/player_right_melee.png')
+        self.lmelee_image = load_image('Sprites/Player/player_left_melee.png')
 
     def update(self):
         self.moving_frame = (self.moving_frame + 1) % 8

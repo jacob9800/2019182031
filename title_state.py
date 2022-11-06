@@ -9,7 +9,7 @@ image = None
 
 def enter():
     global image
-    image = load_image('startpage.png')
+    image = load_image('Sprites/etc/startpage.png')
     pass
 
 def exit():

@@ -9,7 +9,7 @@ class Tennis:
     def __init__(self):
 
         if Tennis.tennis_image == None:
-            Tennis.tennis_image = load_image('tennisball.png')
+            Tennis.tennis_image = load_image('Sprites/Bullet/tennisball.png')
 
         self.speed = 30
         self.x = play_state.player.x
@@ -43,9 +43,9 @@ class Cola:
 
     def __init__(self):
         if Cola.coke_l_image == None:
-            Cola.coke_l_image = load_image('cola_left.png')
+            Cola.coke_l_image = load_image('Sprites/Bullet/cola_left.png')
         if Cola.coke_r_image == None:
-            Cola.coke_r_image = load_image('cola_right.png')
+            Cola.coke_r_image = load_image('Sprites/Bullet/cola_right.png')
 
         self.speed = 15
         self.x = play_state.player.x

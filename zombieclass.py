@@ -29,19 +29,19 @@ class NormalZombie:
         self.speed = random.randint(300,500) / 100
         self.hp = 50  # 좀비 HP, 0이 될 경우 사망 애니메이션 출력
         if NormalZombie.right_image == None:
-            NormalZombie.right_image = load_image('zombie_right_walk.png')
+            NormalZombie.right_image = load_image('Sprites/Zombie_male/zombie_right_walk.png')
         if NormalZombie.left_image == None:
-            NormalZombie.left_image = load_image('zombie_left_walk.png')
+            NormalZombie.left_image = load_image('Sprites/Zombie_male/zombie_left_walk.png')
         if NormalZombie.rattack_image == None:
-            NormalZombie.rattack_image = load_image('zombie_right_attack.png')
+            NormalZombie.rattack_image = load_image('Sprites/Zombie_male/zombie_right_attack.png')
         if NormalZombie.lattack_image == None:
-            NormalZombie.lattack_image = load_image('zombie_left_attack.png')
+            NormalZombie.lattack_image = load_image('Sprites/Zombie_male/zombie_left_attack.png')
         if NormalZombie.rdead_image == None:
-            NormalZombie.rdead_image = load_image('zombie_right_dead.png')
+            NormalZombie.rdead_image = load_image('Sprites/Zombie_male/zombie_right_dead.png')
         if NormalZombie.ldead_image == None:
-            NormalZombie.ldead_image = load_image('zombie_left_dead.png')
+            NormalZombie.ldead_image = load_image('Sprites/Zombie_male/zombie_left_dead.png')
         if NormalZombie.blood_image == None:
-            NormalZombie.blood_image = load_image('Bloodeffect.png')
+            NormalZombie.blood_image = load_image('Sprites/Effect/Bloodeffect.png')
 
     def update(self):
         self.zmoving_frame = (self.zmoving_frame + 1) % 10

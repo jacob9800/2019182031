@@ -8,7 +8,7 @@ logo_time = 0.0
 
 def enter():
     global image
-    image = load_image('pausescreen.png')
+    image = load_image('Sprites/etc/pausescreen.png')
     pass
 
 def exit():

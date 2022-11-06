@@ -5,9 +5,9 @@ import game_framework
 
 class Map:
     def __init__(self):
-        self.background = load_image('background.png')
-        self.tile = load_image('tile.png')
-        self.background_city = load_image('city.png')
+        self.background = load_image('Sprites/Map/background.png')
+        self.tile = load_image('Sprites/Map/tile.png')
+        self.background_city = load_image('Sprites/Map/city.png')
         self.mapsize = 1000
         self.counter = 0 # 좀비 수 제한 두기
     def draw(self):
