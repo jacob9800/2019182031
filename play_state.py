@@ -33,18 +33,8 @@ def handle_events():
                 game_framework.push_state(pause_state)
             if event.key == SDLK_c:
                 player.shoot = 1
-                if bulletmod == 0: # 탄환 종류 선택
-                    if tennis_mag > 0:
-                        tennisball.append(Tennis()) # 테니스공 1발 생성
-                        tennis_mag -= 1 # 보유 탄환 1 감소
-                    else :
-                        print("총알 없음!")
-                elif bulletmod == 1:
-                    if cola_mag > 0:
-                        cola.append(Cola()) # 콜라 1발 생성
-                        cola_mag -= 1
-                    else :
-                        print("총알 없음!")
+                player.shoot_time = get_time()
+
 
             if event.key == SDLK_1:
                 bulletmod = 0
@@ -63,7 +53,7 @@ def handle_events():
                 player.idle = 0
                 player.attack = 0
             if event.key == SDLK_c:
-                player.shoot = 0 # 플레이어 총탄 사격 취소
+                player.shoot = 0
 
 
 player = None
