@@ -48,6 +48,7 @@ class Cola:
             Cola.coke_r_image = load_image('Sprites/Bullet/cola_right.png')
 
         self.speed = 15
+        self.count = 0
         self.x = play_state.player.x
         self.y = play_state.player.y
         self.dir = play_state.player.dir
@@ -63,8 +64,7 @@ class Cola:
 
     def collide(self, zombie):
         if zombie.zx - 40 <= self.x <= zombie.zx + 40 and play_state.cola_mag >= 0 and zombie.dead == 0:
-            play_state.cola.remove(self)
-            del self
+            self.count += 1
             zombie.hp -= 5
             zombie.hit = 1
             zombie.hit_time = get_time()
@@ -75,4 +75,8 @@ class Cola:
                 zombie.zx -= 5
             elif zombie.zdir == -1:
                 zombie.zx += 5
+
+            if self.count == 5:
+                play_state.cola.remove(self)
+                del self
 

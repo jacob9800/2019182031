@@ -9,6 +9,7 @@ from playerclass import Player
 from zombieclass import NormalZombie
 from bulletclass import Tennis
 from bulletclass import Cola
+import game_world
 
 
 def handle_events():
@@ -35,13 +36,12 @@ def handle_events():
                 player.shoot = 1
                 player.shoot_time = get_time()
 
-
             if event.key == SDLK_1:
-                bulletmod = 0
+                player.bulletmod = 0
                 print("테니스공")
 
             if event.key == SDLK_2:
-                bulletmod = 1
+                player.bulletmod = 1
                 print("콜라")
 
         elif event.type == SDL_KEYUP:
@@ -54,6 +54,18 @@ def handle_events():
                 player.attack = 0
             if event.key == SDLK_c:
                 player.shoot = 0
+        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+        #     game_framework.quit()
+        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
+        #     game_framework.push_state(pause_state)
+        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
+        #     player.bulletmod = 0
+        #     print("테니스공")
+        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_2):
+        #     player.bulletmod = 1
+        #     print("콜라")
+        # else:
+        #     player.handle_event(event)
 
 
 player = None
@@ -61,7 +73,6 @@ gamemap = None
 running = True
 n_zombie = None
 tennisball = None
-bulletmod = 0
 cola = None
 tennis_mag = 30
 cola_mag = 7
@@ -72,6 +83,7 @@ def enter():
     gamemap = GameMap.Map()
     player = Player()
     n_zombie = []
+
     tennisball = []
     cola = []
 

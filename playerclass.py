@@ -4,13 +4,30 @@ import bulletclass
 import time
 import game_over_state
 import game_framework
+import game_world
+
+
 
 class Player:
+    # Player Run Speed
+    PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+    RUN_SPEED_KMPH = 20.0  # Km / Hour
+    RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+    RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+    RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+    # Player Action Speed
+    TIME_PER_ACTION = 0.5
+    ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+    FRAMES_PER_ACTION = 8
+    FRAMES_PER_IDLE = 10
+    FRAMES_PER_SHOOT = 5
     def __init__(self):
         self.x, self.y = 500, 90 # 플레이어 좌표
-        self.shoot_time = 0
-        self.hit_time = 0 # 피격당한 시간
-        self.current_time = 0 # 실시간 캐릭터 시간
+        self.shoot_time = 0.0
+        self.hit_time = 0.0 # 피격당한 시간
+        self.current_time = 0.0 # 실시간 캐릭터 시간
+        self.bulletmod = 0
         self.moving_frame = 0 # 이동 시 프레임
         self.idle_frame = 0 # 정지 시 프레임
         self.shoot_frame = 0 # 사격 시 프레임
@@ -37,27 +54,24 @@ class Player:
 
         if self.idle == 1:
             self.x += self.dir * 13
-        else:
-            pass
 
-        if self.x > play_state.gamemap.mapsize:
-            self.x = play_state.gamemap.mapsize
-        elif self.x < 0:
-            self.x = 0
+        self.x = clamp(0, self.x, 1000)
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1:
             self.invincible = 0
 
         if self.shoot == 1:
-            if play_state.bulletmod == 0 and self.current_time - self.shoot_time <= 0.01:  # 탄환 종류 선택
+            if self.bulletmod == 0 and self.current_time - self.shoot_time <= 0.01:  # 탄환 종류 선택
                 if play_state.tennis_mag > 0:
                     play_state.tennisball.append(bulletclass.Tennis())  # 테니스공 1발 생성
+
                     play_state.tennis_mag -= 1  # 보유 탄환 1 감소
                 else:
                     print("총알 없음!")
-            elif play_state.bulletmod == 1 and self.current_time - self.shoot_time <= 0.01:
+            elif self.bulletmod == 1 and self.current_time - self.shoot_time <= 0.01:
                 if play_state.cola_mag > 0:
                     play_state.cola.append(bulletclass.Cola())  # 콜라 1발 생성
+
                     play_state.cola_mag -= 1
                 else:
                     print("총알 없음!")
@@ -126,15 +140,14 @@ class Player:
 
     def melee_attack(self, zombie):
         if (self.x + 100 >= zombie.zx >= self.x and self.dir == 1) or (self.dir == -1 and self.x - 100 <= zombie.zx <= self.x) and self.attack == 1:
+            zombie.hit_time = get_time()
             if self.idle_frame == 2:
                  zombie.hp -= 15
                  if self.dir == 1 and zombie.dead == 0:
                      zombie.hit = 1
-                     zombie.hit_time = get_time()
                      zombie.zx += 50
                  elif self.dir == -1 and zombie.dead == 0:
                      zombie.hit = 1
-                     zombie.hit_time = get_time()
                      zombie.zx -= 50
                  print(zombie.hp)
 
