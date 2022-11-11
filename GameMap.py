@@ -11,10 +11,12 @@ class Map:
         self.background_city = load_image('Sprites/Map/city.png')
         self.mapsize = 1000
         self.counter = 0 # 좀비 수 제한 두기
+        self.font = load_font('Fonts/154_Impact.ttf')
     def draw(self):
         self.background.draw(self.mapsize/2,300)
         self.background_city.draw(self.mapsize/2, 120)
         self.tile.draw(self.mapsize/2, 220)
+        self.font.draw(500, 300,  f'(Killcount: {play_state.killcount})', (255, 255, 0))
 
     def update(self):
         if play_state.killcount <= 100:

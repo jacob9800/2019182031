@@ -151,9 +151,5 @@ class NormalZombie:
                         print(self.hp)
                     else:
                         pass
-        elif group == 'zombie:tennis':
-            pass
-        elif group == 'zombie:cola':
-            pass
 
 

@@ -51,8 +51,6 @@ def enter():
     game_world.add_object(gamemap, 0)
     game_world.add_object(player, 1)
     game_world.add_collision_pairs(player, n_zombie, 'player:zombie')
-    game_world.add_collision_pairs(n_zombie, tennisball, 'zombie:tennis')
-    game_world.add_collision_pairs(n_zombie, cola, 'zombie:cola')
 
     running = True
 
