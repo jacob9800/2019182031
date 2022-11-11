@@ -4,6 +4,12 @@ import time
 import game_framework
 import game_world
 
+PIXEL_PER_METER = (10.0 / 0.3) # 10 pixel 30 cm
+RUN_SPEED_KMPH = 50.0 # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
 class Tennis:
     tennis_image = None
 
@@ -56,9 +62,9 @@ class Tennis:
                 other.hit_time = get_time()
                 print("좀비 체력 : ", other.hp)
                 if other.zdir == 1:
-                    other.zx -= 20
+                    other.zx -= 50
                 elif other.zdir == -1:
-                    other.zx += 20
+                    other.zx += 50
 
 
 
@@ -108,9 +114,9 @@ class Cola:
                 zombie.speed /= 2
             print("좀비 체력 : ", zombie.hp)
             if zombie.zdir == 1:
-                zombie.zx -= 5
+                zombie.zx -= 20
             elif zombie.zdir == -1:
-                zombie.zx += 5
+                zombie.zx += 20
 
             if self.count == 5:
                 if self.count == 5:  # 5명 이상의 좀비 타격 시

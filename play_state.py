@@ -40,6 +40,7 @@ cola = None
 tennis_mag = 30
 cola_mag = 7
 killcount = 0
+zombie_num = 0
 
 def enter():
     global player, gamemap, n_zombie, running, tennisball, cola
@@ -50,8 +51,7 @@ def enter():
     cola = []
     game_world.add_object(gamemap, 0)
     game_world.add_object(player, 1)
-    game_world.add_collision_pairs(player, n_zombie, 'player:zombie')
-
+    game_world.add_objects(n_zombie, 1)
     running = True
 
 # 게임 종료 함수
@@ -63,18 +63,14 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
-    for a, b, group in game_world.all_collision_pairs():
-        if collide(a,b):
-            #print('COLLISION', group)
-            a.handle_collision(b, group) # 어떤 놈(b)이 와서 나한테 꼬라박았나?
-            b.handle_collision(a, group) # 어떤 놈(a)이 와서 나한테 꼬라박았나?
-        else:
-            for zombie in n_zombie:
-                if zombie.dead == 0:
-                    zombie.attack = 0
-                    zombie.idle = 1
-
     for zombie in n_zombie:
+        if collide(player, zombie):
+            zombie.collision(player)
+        else:
+            if zombie.dead == 0:
+                zombie.attack = 0
+                zombie.idle = 1
+
         for ball in tennisball:
             ball.collide(zombie)
         for bottle in cola:
@@ -82,6 +78,8 @@ def update():
 
     if player.hp <= 0:
         game_framework.change_state(game_over_state)
+
+    ZombieSpawn()
 
 
 
@@ -94,7 +92,7 @@ def draw():
 def draw_world():
     for game_object in game_world.all_objects():
         game_object.draw()
-    delay(0.03)
+
 
 def pause():
     pass
@@ -112,3 +110,10 @@ def collide(a, b):
     if bottom_a > top_b: return False
 
     return True
+
+def ZombieSpawn():
+    global zombie_num
+    if len(n_zombie) <= 5:
+        zombie = NormalZombie()
+        n_zombie.append(zombie)
+        game_world.add_object(zombie, 1)
