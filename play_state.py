@@ -6,8 +6,7 @@ import random
 from GameMap import Map
 import time
 from zombieclass import NormalZombie
-from bulletclass import Tennis
-from bulletclass import Cola
+from bulletclass import Tennis, Cola
 from player_class import Player
 import game_world
 
@@ -51,6 +50,9 @@ def enter():
     cola = []
     game_world.add_object(gamemap, 0)
     game_world.add_object(player, 1)
+    game_world.add_collision_pairs(player, n_zombie, 'player:zombie')
+    game_world.add_collision_pairs(n_zombie, tennisball, 'zombie:tennis')
+    game_world.add_collision_pairs(n_zombie, cola, 'zombie:cola')
 
     running = True
 
@@ -63,14 +65,23 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
+    for a, b, group in game_world.all_collision_pairs():
+        if collide(a,b):
+            #print('COLLISION', group)
+            a.handle_collision(b, group) # 어떤 놈(b)이 와서 나한테 꼬라박았나?
+            b.handle_collision(a, group) # 어떤 놈(a)이 와서 나한테 꼬라박았나?
+        else:
+            for zombie in n_zombie:
+                if zombie.dead == 0:
+                    zombie.attack = 0
+                    zombie.idle = 1
 
     for zombie in n_zombie:
-        zombie.dirchange(player)
-        zombie.collide(player)
         for ball in tennisball:
             ball.collide(zombie)
         for bottle in cola:
             bottle.collide(zombie)
+
     if player.hp <= 0:
         game_framework.change_state(game_over_state)
 
@@ -92,3 +103,14 @@ def pause():
 
 def resume():
     pass
+
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True

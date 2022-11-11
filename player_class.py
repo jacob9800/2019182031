@@ -26,14 +26,14 @@ key_event_table = {
 class IDLE:
     @staticmethod
     def enter(self, event):
-        print("ENTER IDLE")
+        #print("ENTER IDLE")
         self.dir = 0
         pass
 
 
     @staticmethod
     def exit(self, event):
-        print("EXIT IDLE")
+        #print("EXIT IDLE")
         pass
 
     @staticmethod
@@ -56,12 +56,12 @@ class IDLE:
 class SHOOT:
     @staticmethod
     def enter(self, event):
-        print("ENTER SHOOT")
+        #print("ENTER SHOOT")
         self.dir = 0
 
     @staticmethod
     def exit(self, event):
-        print("EXIT SHOOT")
+        #print("EXIT SHOOT")
         self.shoot_bullet()
         pass
 
@@ -82,9 +82,7 @@ class SHOOT:
 class RUN:
     @staticmethod
     def enter(self, event):
-        print("ENTER RUN")
-        print(self.dir)
-        print(self.face_dir)
+        #print("ENTER RUN")
 
         # 어떤 이벤트 때문에, SHOOT_RUN으로 들어왔는지 확인하고, 그 이벤트에 따라서 실제 방향을 결정
         if event == RD:
@@ -99,7 +97,7 @@ class RUN:
 
     @staticmethod
     def exit(self, event):
-        print("EXIT RUN")
+        #print("EXIT RUN")
         if self.dir != 0:
             self.face_dir = self.dir
         if event == SHOOTIN:
@@ -128,19 +126,19 @@ class RUN:
 class MELEE:
     @staticmethod
     def enter(self, event):
-        print("ENTER MELEE")
+        #print("ENTER MELEE")
         self.attack = 1
         self.dir = 0
 
     @staticmethod
     def exit(self, event):
-        print("EXIT MELEE")
+        #print("EXIT MELEE")
         self.attack = 0
         pass
 
     @staticmethod
     def do(self):
-        print(self.attack)
+        #print(self.attack)
         self.melee_frame = (self.melee_frame + 1) % 10
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1:
@@ -206,8 +204,10 @@ class Player:
                 print(f'ERROR: State {self.cur_state.__name__}, Event {event_name[event]}')
             self.cur_state.enter(self, event)
 
+
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -223,7 +223,7 @@ class Player:
                 ball = Tennis(self.x + 30 * self.face_dir, self.y, self.face_dir)
                 play_state.tennisball.append(ball) # 충돌 감지용 리스트에 탄환 값 전달
                 game_world.add_object(ball, 2) # 게임 월드에 탄환 추가
-                print('현 탄환 :', len(play_state.tennisball))
+                #game_world.add_collision_pairs(play_state.n_zombie, play_state.tennisball, 'zombie:tennis')
                 play_state.tennis_mag -= 1  # 보유 탄환 1 감소
             else:
                 print("총알 없음!")
@@ -232,6 +232,16 @@ class Player:
                 bottle = Cola(self.x + 50 * self.face_dir, self.y, self.face_dir)
                 play_state.cola.append(bottle) # 충돌 감지용 리스트에 탄환 값 전달
                 game_world.add_object(bottle, 2) # 게임 월드에 탄환 추가
+                #game_world.add_collision_pairs(play_state.n_zombie, play_state.cola, 'zombie:cola')
                 play_state.cola_mag -= 1
             else:
                 print("총알 없음!")
+
+    def get_bb(self):
+        if self.attack == 0:
+            return self.x - 30, self.y - 80, self.x + 30, self.y + 80
+        elif self.attack == 1:
+            return self.x - 70, self.y - 80, self.x + 70, self.y + 80
+
+    def handle_collision(self, other, group):
+        pass

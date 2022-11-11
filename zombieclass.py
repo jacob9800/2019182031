@@ -50,6 +50,11 @@ class NormalZombie:
         self.blood_frame = (self.blood_frame + 1) % 8
         self.current_time = get_time()
 
+        if play_state.player.x > self.zx and self.dead == 0: # 플레이어 x좌표 기준 방향 전환
+            self.zdir = 1
+        elif play_state.player.x < self.zx and self.dead == 0:
+            self.zdir = -1
+
         if self.zx > play_state.gamemap.mapsize:
             self.zx = play_state.gamemap.mapsize
             self.zdir = -1
@@ -67,9 +72,9 @@ class NormalZombie:
             self.idle = 0
             self.dead_time = get_time()
             play_state.killcount += 1
-            print("킬 카운트 : ",play_state.killcount)
+            print("킬 카운트 : ", play_state.killcount)
 
-        if (self.current_time - self.dead_time >= 1) and self.dead == 1: # 사망 1초 경과시 화면에서 제거 후 삭제 대기 상태로 전환
+        if (self.current_time - self.dead_time >= 0.5) and self.dead == 1: # 사망 1초 경과시 화면에서 제거 후 삭제 대기 상태로 전환
             self.dead = 2
             print(play_state.killcount, "번 좀비 사망")
 
@@ -79,6 +84,7 @@ class NormalZombie:
             del self
 
     def draw(self):
+        draw_rectangle(*self.get_bb())
         if self.zdir == 1:
             if self.dead == 0:
                 if self.attack == 0:
@@ -111,41 +117,43 @@ class NormalZombie:
             else:
                 self.hit = 0
 
+    def get_bb(self):
+        return self.zx - 50, self.zy - 80, self.zx + 50, self.zy + 80
 
-    def dirchange(self,player):
-        if player.x > self.zx and self.dead == 0:
-            self.zdir = 1
-        elif player.x < self.zx and self.dead == 0:
-            self.zdir = -1
+    def handle_collision(self, other, group):
+        if group == 'player:zombie':
+            if self.dead == 0: # 죽은 좀비들은 피격판정 x
+                if other.attack == 0: # IDLE 상태의 플레이어에게 접촉 시
+                    self.attack = 1
+                    self.idle = 0
+                    if other.invincible == 0 and self.zattack_frame == 7:
+                        other.hp -= 10  # 플레이어에게 데미지
+                        other.hit_time = get_time()  # 피격 시간 기록
+                        other.invincible = 1
 
-    def collide(self, player):
-        if self.dead == 0:
-            if player.x - 50 <= self.zx <= player.x + 50: # 무방비 상태의 플레이어에게 접촉시
-                self.attack = 1
-                self.idle = 0
-                if player.invincible == 0 and self.zattack_frame == 7:
-                    player.hp -= 10 # 플레이어에게 데미지
-                    player.hit_time = get_time() # 피격 시간 기록
-                    player.invincible = 1
+                    print(other.hp)
+                else:
+                    pass
 
-                print(player.hp)
-            else:
-                self.attack = 0
-                self.idle = 1
-
-            if player.x - 100 <= self.zx <= player.x + 100 and player.attack == 1: # 근접무기를 휘두르는 중인 플레이어에게 접촉시
-                print('hit!')
-                if player.melee_frame == 2:
-                    self.hit_time = get_time()  # 피격 시간 기록
-                    self.hp -= 15 # 자기 자신에게 데미지
-                    if self.zdir == -1 and self.dead == 0:
-                        self.hit = 1
-                        self.zx += 50
-                    elif self.zdir == 1 and self.dead == 0:
-                        self.hit = 1
-                        self.zx -= 50
-                    print(self.hp)
-        else:
+                if other.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
+                    #print('hit!')
+                    if other.melee_frame == 2:
+                        if self.zdir == -1 and self.dead == 0 and other.face_dir == 1:
+                            self.hit_time = get_time()  # 피격 시간 기록
+                            self.hp -= 15  # 자기 자신에게 데미지
+                            self.hit = 1
+                            self.zx += 50
+                        elif self.zdir == 1 and self.dead == 0 and other.face_dir == -1:
+                            self.hit_time = get_time()  # 피격 시간 기록
+                            self.hp -= 15  # 자기 자신에게 데미지
+                            self.hit = 1
+                            self.zx -= 50
+                        print(self.hp)
+                    else:
+                        pass
+        elif group == 'zombie:tennis':
+            pass
+        elif group == 'zombie:cola':
             pass
 
 

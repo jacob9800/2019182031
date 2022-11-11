@@ -22,6 +22,7 @@ class Map:
                 zombie = NormalZombie()
                 play_state.n_zombie.append(zombie)
                 game_world.add_object(zombie, 3)
+                game_world.add_collision_pairs(play_state.player, play_state.n_zombie, 'player:zombie')
                 pass
 
 
