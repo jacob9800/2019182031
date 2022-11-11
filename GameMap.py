@@ -2,6 +2,7 @@ from pico2d import *
 import play_state
 from zombieclass import NormalZombie
 import game_framework
+import game_world
 
 class Map:
     def __init__(self):
@@ -15,10 +16,13 @@ class Map:
         self.background_city.draw(self.mapsize/2, 120)
         self.tile.draw(self.mapsize/2, 220)
 
-    def stage(self):
+    def update(self):
         if play_state.killcount <= 100:
             if len(play_state.n_zombie) < 5:
-                play_state.n_zombie.append(NormalZombie())
+                zombie = NormalZombie()
+                play_state.n_zombie.append(zombie)
+                game_world.add_object(zombie, 3)
                 pass
+
 
 

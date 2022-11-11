@@ -64,14 +64,12 @@ class Player:
             if self.bulletmod == 0 and self.current_time - self.shoot_time <= 0.01:  # 탄환 종류 선택
                 if play_state.tennis_mag > 0:
                     play_state.tennisball.append(bulletclass.Tennis())  # 테니스공 1발 생성
-
                     play_state.tennis_mag -= 1  # 보유 탄환 1 감소
                 else:
                     print("총알 없음!")
             elif self.bulletmod == 1 and self.current_time - self.shoot_time <= 0.01:
                 if play_state.cola_mag > 0:
                     play_state.cola.append(bulletclass.Cola())  # 콜라 1발 생성
-
                     play_state.cola_mag -= 1
                 else:
                     print("총알 없음!")

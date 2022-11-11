@@ -2,28 +2,34 @@ from pico2d import *
 import play_state
 import time
 import game_framework
+import game_world
 
 class Tennis:
     tennis_image = None
 
-    def __init__(self):
+    def __init__(self, x = 0, y = 0, dir = 1):
 
         if Tennis.tennis_image == None:
             Tennis.tennis_image = load_image('Sprites/Bullet/tennisball.png')
 
         self.speed = 30
-        self.x = play_state.player.x
-        self.y = play_state.player.y
-        self.dir = play_state.player.dir
+        self.x = x
+        self.y = y
+        self.dir = dir
 
     def update(self):
         self.x += self.dir * self.speed
 
     def draw(self):
         self.tennis_image.draw(self.x, self.y)
+        if self.x <= 0 or self.x >= 1000:
+            game_world.remove_object(self) # 게임 월드에서 오브젝트 삭제
+            play_state.tennisball.remove(self) # play_state 리스트에서 데이터 값 삭제
+            del self # 메모리 삭제
 
     def collide(self, zombie):
         if zombie.zx - 20 <= self.x + 20 and self.x - 20 <= zombie.zx + 20 and play_state.tennis_mag >= 0 and zombie.dead == 0:
+            game_world.remove_object(self)
             play_state.tennisball.remove(self)
             del self
             zombie.hp -= 20
@@ -41,7 +47,7 @@ class Cola:
     coke_l_image = None
     coke_r_image = None
 
-    def __init__(self):
+    def __init__(self, x = 500, y = 20, dir = 1):
         if Cola.coke_l_image == None:
             Cola.coke_l_image = load_image('Sprites/Bullet/cola_left.png')
         if Cola.coke_r_image == None:
@@ -49,12 +55,16 @@ class Cola:
 
         self.speed = 15
         self.count = 0
-        self.x = play_state.player.x
-        self.y = play_state.player.y
-        self.dir = play_state.player.dir
+        self.x = x
+        self.y = y
+        self.dir = dir
 
     def update(self):
         self.x += self.dir * self.speed
+        if self.x <= 0 or self.x >= 1000:
+            game_world.remove_object(self)
+            play_state.cola.remove(self)
+            del self
 
     def draw(self):
         if self.dir == -1:
@@ -76,7 +86,8 @@ class Cola:
             elif zombie.zdir == -1:
                 zombie.zx += 5
 
-            if self.count == 5:
+            if self.count == 5: # 5명 이상의 좀비 타격 시
+                game_world.remove_object(self)
                 play_state.cola.remove(self)
                 del self
 

@@ -3,12 +3,12 @@ import game_framework
 import pause_state
 import game_over_state
 import random
-import GameMap
+from GameMap import Map
 import time
-from playerclass import Player
 from zombieclass import NormalZombie
 from bulletclass import Tennis
 from bulletclass import Cola
+from player_class import Player
 import game_world
 
 
@@ -18,54 +18,18 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
-                game_framework.quit()
-            if event.key == SDLK_RIGHT:
-                player.idle = 1
-                player.dir = 1
-            if event.key == SDLK_LEFT:
-                player.idle = 1
-                player.dir = -1
-            if event.key == SDLK_SPACE:
-                player.idle = 0
-                player.attack = 1
-            if event.key == SDLK_p:
-                game_framework.push_state(pause_state)
-            if event.key == SDLK_c:
-                player.shoot = 1
-                player.shoot_time = get_time()
-
-            if event.key == SDLK_1:
-                player.bulletmod = 0
-                print("테니스공")
-
-            if event.key == SDLK_2:
-                player.bulletmod = 1
-                print("콜라")
-
-        elif event.type == SDL_KEYUP:
-            if event.key == SDLK_RIGHT:
-                player.idle = 0
-            if event.key == SDLK_LEFT:
-                player.idle = 0
-            if event.key == SDLK_SPACE:
-                player.idle = 0
-                player.attack = 0
-            if event.key == SDLK_c:
-                player.shoot = 0
-        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-        #     game_framework.quit()
-        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
-        #     game_framework.push_state(pause_state)
-        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
-        #     player.bulletmod = 0
-        #     print("테니스공")
-        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_2):
-        #     player.bulletmod = 1
-        #     print("콜라")
-        # else:
-        #     player.handle_event(event)
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+            game_framework.quit()
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
+            game_framework.push_state(pause_state)
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
+            player.bulletmod = 0
+            print("테니스공")
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_2):
+            player.bulletmod = 1
+            print("콜라")
+        else:
+            player.handle_event(event)
 
 
 player = None
@@ -80,12 +44,13 @@ killcount = 0
 
 def enter():
     global player, gamemap, n_zombie, running, tennisball, cola
-    gamemap = GameMap.Map()
+    gamemap = Map()
     player = Player()
     n_zombie = []
-
     tennisball = []
     cola = []
+    game_world.add_object(gamemap, 0)
+    game_world.add_object(player, 1)
 
     running = True
 
@@ -95,19 +60,13 @@ def exit():
     del player, gamemap, n_zombie, tennisball, cola
 
 def update():
-    player.update()
-    gamemap.stage()
-    for ball in tennisball:
-        ball.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
 
-    for bottle in cola:
-        bottle.update()
 
     for zombie in n_zombie:
-        zombie.update()
         zombie.dirchange(player)
         zombie.collide(player)
-        player.melee_attack(zombie)
         for ball in tennisball:
             ball.collide(zombie)
         for bottle in cola:
@@ -124,15 +83,9 @@ def draw():
 
 
 def draw_world():
-    gamemap.draw()
-    player.draw()
-    for zombie in n_zombie:
-        zombie.draw()
+    for game_object in game_world.all_objects():
+        game_object.draw()
     delay(0.03)
-    for ball in tennisball:
-        ball.draw()
-    for bottle in cola:
-        bottle.draw()
 
 def pause():
     pass

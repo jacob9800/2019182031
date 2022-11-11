@@ -3,6 +3,7 @@ import play_state
 import time
 import game_framework
 import random
+import game_world
 
 class NormalZombie:
     right_image = None
@@ -73,6 +74,7 @@ class NormalZombie:
             print(play_state.killcount, "번 좀비 사망")
 
         if self.dead == 2: # 삭제 대기 중인 객체 확인 후 제거
+            game_world.remove_object(self)
             play_state.n_zombie.remove(self)
             del self
 
@@ -118,18 +120,31 @@ class NormalZombie:
 
     def collide(self, player):
         if self.dead == 0:
-            if player.x - 50 <= self.zx <= player.x + 50:
+            if player.x - 50 <= self.zx <= player.x + 50: # 무방비 상태의 플레이어에게 접촉시
                 self.attack = 1
                 self.idle = 0
                 if player.invincible == 0 and self.zattack_frame == 7:
-                    player.hp -= 10
-                    player.hit_time = get_time()
+                    player.hp -= 10 # 플레이어에게 데미지
+                    player.hit_time = get_time() # 피격 시간 기록
                     player.invincible = 1
 
                 print(player.hp)
             else:
                 self.attack = 0
                 self.idle = 1
+
+            if player.x - 100 <= self.zx <= player.x + 100 and player.attack == 1: # 근접무기를 휘두르는 중인 플레이어에게 접촉시
+                print('hit!')
+                if player.melee_frame == 2:
+                    self.hit_time = get_time()  # 피격 시간 기록
+                    self.hp -= 15 # 자기 자신에게 데미지
+                    if self.zdir == -1 and self.dead == 0:
+                        self.hit = 1
+                        self.zx += 50
+                    elif self.zdir == 1 and self.dead == 0:
+                        self.hit = 1
+                        self.zx -= 50
+                    print(self.hp)
         else:
             pass
 
