@@ -28,6 +28,13 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8 # 이동 시 프레임
+FRAMES_PER_IDLE = 10 # 대기 시 프레임
+FRAMES_PER_MELEE = 10
+FRAMES_PER_SHOOT = 5 # 사격 시 프레임
+
 # 스테이트를 구현(class를 이용해서)
 class IDLE:
     @staticmethod
@@ -44,7 +51,7 @@ class IDLE:
 
     @staticmethod
     def do(self):
-        self.idle_frame = (self.idle_frame + 1) % 10
+        self.idle_frame = (self.idle_frame + FRAMES_PER_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 10
         self.current_time = get_time()
 
         self.x = clamp(0, self.x, 1000) # x 가동 범위 0 ~ 1000
@@ -54,10 +61,22 @@ class IDLE:
 
     @staticmethod
     def draw(self):
-        if self.face_dir == 1:
-            self.ridle_image.clip_draw(self.idle_frame * 123, 0, 123, 160, self.x, self.y)
-        elif self.face_dir == -1:
-            self.lidle_image.clip_draw(self.idle_frame * 123, 0, 123, 160, self.x, self.y)
+        if self.invincible == 0:
+            if self.face_dir == 1:
+                self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+            elif self.face_dir == -1:
+                self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+        elif self.invincible == 1:
+            if self.face_dir == 1:
+                if int(self.idle_frame) % 2 != 0:
+                    self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.idle_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
+            elif self.face_dir == -1:
+                if int(self.idle_frame) % 2 != 0:
+                    self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.idle_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
 
 class SHOOT:
     @staticmethod
@@ -73,24 +92,37 @@ class SHOOT:
 
     @staticmethod
     def do(self):
-        self.shoot_frame = (self.shoot_frame + 1) % 5
+        self.shoot_frame = (self.shoot_frame + FRAMES_PER_SHOOT * ACTION_PER_TIME * game_framework.frame_time) % 5
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1: # 피격시 2초가량 무적 제공
             self.invincible = 0
 
     @staticmethod
     def draw(self):
-        if self.face_dir == 1:
-            self.rshoot_image.clip_draw(self.shoot_frame * 123, 0, 123, 160, self.x, self.y)
-        elif self.face_dir == -1:
-            self.lshoot_image.clip_draw(self.shoot_frame * 123, 0, 123, 160, self.x, self.y)
+
+        if self.invincible == 0:
+            if self.face_dir == 1:
+                self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+            elif self.face_dir == -1:
+                self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+        elif self.invincible == 1:
+            if self.face_dir == 1:
+                if int(self.shoot_frame) % 2 != 0:
+                    self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.shoot_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
+            elif self.face_dir == -1:
+                if int(self.shoot_frame) % 2 != 0:
+                    self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.shoot_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
 
 class RUN:
     @staticmethod
     def enter(self, event):
         #print("ENTER RUN")
 
-        # 어떤 이벤트 때문에, SHOOT_RUN으로 들어왔는지 확인하고, 그 이벤트에 따라서 실제 방향을 결정
+        # 어떤 이벤트 때문에, RUN으로 들어왔는지 확인하고, 그 이벤트에 따라서 실제 방향을 결정
         if event == RD:
             self.dir = 1
         elif event == LD:
@@ -112,7 +144,7 @@ class RUN:
 
     @staticmethod
     def do(self):
-        self.moving_frame = (self.moving_frame + 1) % 8
+        self.moving_frame = (self.moving_frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.x += self.dir * RUN_SPEED_PPS * game_framework.frame_time
         self.current_time = get_time()
         self.x = clamp(0, self.x, 1000) # x 가동 범위 0 ~ 1000
@@ -124,10 +156,22 @@ class RUN:
 
     @staticmethod
     def draw(self):
-        if self.dir == 1:
-            self.right_image.clip_draw(self.moving_frame * 123, 0, 123, 160, self.x, self.y)
-        elif self.dir == -1:
-            self.left_image.clip_draw(self.moving_frame * 123, 0, 123, 160, self.x, self.y)
+        if self.invincible == 0:
+            if self.dir == 1:
+                self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+            elif self.dir == -1:
+                self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+        elif self.invincible == 1:
+            if self.dir == 1:
+                if int(self.moving_frame) % 2 != 0:
+                    self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.moving_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
+            elif self.dir == -1:
+                if int(self.moving_frame) % 2 != 0:
+                    self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.moving_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
 
 class MELEE:
     @staticmethod
@@ -145,17 +189,42 @@ class MELEE:
     @staticmethod
     def do(self):
         #print(self.attack)
-        self.melee_frame = (self.melee_frame + 1) % 10
+        self.melee_frame = (self.melee_frame + FRAMES_PER_MELEE * ACTION_PER_TIME * game_framework.frame_time) % 10
+
+        if int(self.melee_frame) == 0:
+            self.atkchance = True
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1:
             self.invincible = 0
 
     @staticmethod
     def draw(self):
-        if self.face_dir == 1:
-            self.rmelee_image.clip_draw(self.melee_frame * 123, 0, 123, 160, self.x, self.y)
-        elif self.face_dir == -1:
-            self.lmelee_image.clip_draw(self.melee_frame * 123, 0, 123, 160, self.x, self.y)
+        if self.invincible == 0:
+            if self.face_dir == 1:
+                self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                if int(self.melee_frame) >= 4:
+                    self.rslash_image.draw(self.x + 40, self.y)
+            elif self.face_dir == -1:
+                self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                if int(self.melee_frame) >= 4:
+                    self.lslash_image.draw(self.x - 40, self.y)
+        elif self.invincible == 1:
+            if self.face_dir == 1:
+                if int(self.melee_frame) % 2 != 0:
+                    self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.melee_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
+
+                if int(self.melee_frame) >= 4:
+                    self.rslash_image.draw(self.x + 40, self.y)
+            elif self.face_dir == -1:
+                if int(self.melee_frame) % 2 != 0:
+                    self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                elif int(self.melee_frame) % 2 == 0:
+                    self.invis_image.draw(self.x, self.y)
+
+                if int(self.melee_frame) >= 4:
+                    self.lslash_image.draw(self.x - 40, self.y)
 
 
 # 상태 변환
@@ -170,6 +239,7 @@ next_state = {
 class Player:
     def __init__(self):
         self.x, self.y = 500, 90  # 플레이어 좌표
+        self.atkchance = False
         self.shoot_time = 0.0
         self.hit_time = 0.0  # 피격당한 시간
         self.current_time = 0.0  # 실시간 캐릭터 시간
@@ -193,7 +263,9 @@ class Player:
         self.lmelee_image = load_image('Sprites/Player/player_left_melee.png')
         self.lshoot_image = load_image('Sprites/Player/player_left_shoot.png')
         self.rshoot_image = load_image('Sprites/Player/player_right_shoot.png')
-
+        self.rslash_image = load_image('Sprites/Effect/slasheffect_right.png')
+        self.lslash_image = load_image('Sprites/Effect/slasheffect_left.png')
+        self.invis_image = load_image('Sprites/Player/invisible.png')
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
@@ -226,7 +298,7 @@ class Player:
     def shoot_bullet(self):
         if self.bulletmod == 0 :  # 탄환 종류 선택
             if play_state.tennis_mag > 0:
-                ball = Tennis(self.x + 30 * self.face_dir, self.y, self.face_dir)
+                ball = Tennis(self.x + 50 * self.face_dir, self.y, self.face_dir)
                 play_state.tennisball.append(ball) # 충돌 감지용 리스트에 탄환 값 전달
                 game_world.add_object(ball, 2) # 게임 월드에 탄환 추가
                 #game_world.add_collision_pairs(play_state.n_zombie, play_state.tennisball, 'zombie:tennis')
@@ -235,7 +307,7 @@ class Player:
                 print("총알 없음!")
         elif self.bulletmod == 1 :
             if play_state.cola_mag > 0:
-                bottle = Cola(self.x + 50 * self.face_dir, self.y, self.face_dir)
+                bottle = Cola(self.x + 70 * self.face_dir, self.y, self.face_dir)
                 play_state.cola.append(bottle) # 충돌 감지용 리스트에 탄환 값 전달
                 game_world.add_object(bottle, 2) # 게임 월드에 탄환 추가
                 #game_world.add_collision_pairs(play_state.n_zombie, play_state.cola, 'zombie:cola')

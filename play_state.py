@@ -113,7 +113,7 @@ def collide(a, b):
 
 def ZombieSpawn():
     global zombie_num
-    if len(n_zombie) <= 5:
+    if len(n_zombie) <= 2:
         zombie = NormalZombie()
         n_zombie.append(zombie)
         game_world.add_object(zombie, 1)

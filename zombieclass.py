@@ -12,7 +12,9 @@ ZRUN_SPEED_MPS = (ZRUN_SPEED_MPM / 60.0)
 ZRUN_SPEED_PPS = (ZRUN_SPEED_MPS * ZPIXEL_PER_METER)
 
 ZTIME_PER_ACTION = 0.9
+BLOOD_PER_ACTION = 0.05 # 출혈 속도
 ZACTION_PER_TIME = 1.0 / ZTIME_PER_ACTION
+BLOOD_PER_TIME = 1.0 / BLOOD_PER_ACTION
 ZFRAMES_PER_ACTION = 8 # 공격, 출혈 시 프레임
 ZFRAMES_PER_MOVING = 10 # 이동 시 프레임
 
@@ -60,7 +62,7 @@ class NormalZombie:
         #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.zmoving_frame = (self.zmoving_frame + ZFRAMES_PER_MOVING * ZACTION_PER_TIME * game_framework.frame_time) % 10
         self.zattack_frame = (self.zattack_frame + ZFRAMES_PER_ACTION * ZACTION_PER_TIME * game_framework.frame_time) % 8
-        self.blood_frame = (self.blood_frame + ZFRAMES_PER_ACTION * ZACTION_PER_TIME * game_framework.frame_time) % 8
+        self.blood_frame = (self.blood_frame + BLOOD_PER_ACTION * BLOOD_PER_TIME * game_framework.frame_time) % 8
         self.current_time = get_time()
 
         if play_state.player.x > self.zx and self.dead == 0: # 플레이어 x좌표 기준 방향 전환
@@ -149,7 +151,7 @@ class NormalZombie:
 
             if player.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
                 # print('hit!')
-                if player.melee_frame == 2:
+                if player.atkchance == True:
                     if self.zdir == -1 and self.dead == 0 and player.face_dir == 1:
                         self.hit_time = get_time()  # 피격 시간 기록
                         self.hp -= 15  # 자기 자신에게 데미지
@@ -160,6 +162,7 @@ class NormalZombie:
                         self.hp -= 15  # 자기 자신에게 데미지
                         self.hit = 1
                         self.zx -= 50
+                    player.atkchance = False
                     print(self.hp)
                 else:
                     pass
