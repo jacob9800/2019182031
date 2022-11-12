@@ -41,12 +41,14 @@ class Itembox:
         self.boxmod = random.randint(0,7) # 0 ~ 4 = 박스,  5 ~ 7 : 메디킷
         self.collidable = False
 
+
     def update(self):
         self.y -= RUN_SPEED_KMPH * game_framework.frame_time * self.speed
 
         if self.y <= 60:
             self.y = 60
             self.collidable = True
+
 
     def draw(self):
         if self.boxmod == 0:
@@ -63,33 +65,36 @@ class Itembox:
             self.medkit_image.draw(self.x, self.y)
         #draw_rectangle(*self.get_bb())
 
-    def collision(self, player):
-        if self.collidable == True:
-            if 5 <= self.boxmod <= 7 and player.hp < 100:
-                print(self.boxmod, '메디킷 획득')
-                if player.hp <= 50:
-                    player.hp += 50
-                elif 100 > player.hp > 50:
-                    player.hp = 100
-                play_state.item.remove(self)
-                game_world.remove_object(self)
-                del self
-            elif 0 <= self.boxmod <= 4:
-                if self.boxmod == 0:
-                    print(self.boxmod, '번 상자 획득')
-                    play_state.tennis_mag = 30
-                    play_state.item.remove(self)
+    def handle_collision(self, player,group):
+        if group == 'player:item':
+            if self.collidable == True:
+                if 5 <= self.boxmod <= 7 and player.hp < 100:
+                    #print(self.boxmod, '메디킷 획득')
+                    if player.hp <= 50:
+                        player.hp += 50
+                    elif 100 > player.hp > 50:
+                        player.hp = 100
+                    player.gettime = get_time()
+                    player.boxtype = 5
                     game_world.remove_object(self)
                     del self
-                elif self.boxmod == 1:
-                    print(self.boxmod, '번 상자 획득')
-                    play_state.cola_mag = 7
-                    play_state.item.remove(self)
-                    game_world.remove_object(self)
-                    del self
-        else:
-            pass
-
+                elif 0 <= self.boxmod <= 4:
+                    if self.boxmod == 0 or 2 <= self.boxmod <= 4:
+                        player.gettime = get_time()
+                        player.boxtype = 0
+                        play_state.tennis_mag = 30
+                        game_world.remove_object(self)
+                        del self
+                    elif self.boxmod == 1:
+                        player.gettime = get_time()
+                        player.boxtype = 1
+                        play_state.cola_mag = 7
+                        #play_state.item.remove(self)
+                        game_world.remove_object(self)
+                        del self
+            else:
+                pass
 
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25
+

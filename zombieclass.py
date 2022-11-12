@@ -96,12 +96,12 @@ class NormalZombie:
             print(play_state.killcount, "번 좀비 사망")
 
         if self.dead == 2: # 삭제 대기 중인 객체 확인 후 제거
-            play_state.n_zombie.remove(self)
+            #play_state.n_zombie.remove(self)
             game_world.remove_object(self)
             del self
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         if self.zdir == 1:
             if self.dead == 0:
                 if self.attack == 0:
@@ -134,74 +134,79 @@ class NormalZombie:
             else:
                 self.hit = 0
 
-    def collision(self, player):
-        if self.dead == 0:  # 죽은 좀비들은 피격판정 x
-            if player.attack == 0:  # IDLE 상태의 플레이어에게 접촉 시
-                self.idle = 0
-                self.attack = 1
-                if player.invincible == 0 and self.atkchance == True:
-                    self.atkchance = False
-                    player.hp -= 10  # 플레이어에게 데미지
-                    player.hit_time = get_time()  # 피격 시간 기록
-                    player.invincible = 1
+        if play_state.collide(play_state.player, self) == False:
+            if self.dead == 0:
+                self.attack = 0
+                self.idle = 1
 
-                print(player.hp)
-            else:
-                pass
-
-            if player.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
-                # print('hit!')
-                if player.atkchance == True:
-                    if self.zdir == -1 and self.dead == 0 and player.face_dir == 1:
-                        self.hit_time = get_time()  # 피격 시간 기록
-                        self.hp -= 15  # 자기 자신에게 데미지
-                        self.hit = 1
-                        self.zx += 50
-                    elif self.zdir == 1 and self.dead == 0 and player.face_dir == -1:
-                        self.hit_time = get_time()  # 피격 시간 기록
-                        self.hp -= 15  # 자기 자신에게 데미지
-                        self.hit = 1
-                        self.zx -= 50
-                    player.atkchance = False
-                    print(self.hp)
-                else:
-                    pass
+    # def collision(self, player):
+    #     if self.dead == 0:  # 죽은 좀비들은 피격판정 x
+    #         if player.attack == 0:  # IDLE 상태의 플레이어에게 접촉 시
+    #             self.idle = 0
+    #             self.attack = 1
+    #             if player.invincible == 0 and self.atkchance == True:
+    #                 self.atkchance = False
+    #                 player.hp -= 10  # 플레이어에게 데미지
+    #                 player.hit_time = get_time()  # 피격 시간 기록
+    #                 player.invincible = 1
+    #
+    #             print(player.hp)
+    #         else:
+    #             pass
+    #
+    #         if player.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
+    #             # print('hit!')
+    #             if player.atkchance == True:
+    #                 if self.zdir == -1 and self.dead == 0 and player.face_dir == 1:
+    #                     self.hit_time = get_time()  # 피격 시간 기록
+    #                     self.hp -= 15  # 자기 자신에게 데미지
+    #                     self.hit = 1
+    #                     self.zx += 50
+    #                 elif self.zdir == 1 and self.dead == 0 and player.face_dir == -1:
+    #                     self.hit_time = get_time()  # 피격 시간 기록
+    #                     self.hp -= 15  # 자기 자신에게 데미지
+    #                     self.hit = 1
+    #                     self.zx -= 50
+    #                 player.atkchance = False
+    #                 print(self.hp)
+    #             else:
+    #                 pass
 
     def get_bb(self):
         return self.zx - 60, self.zy - 80, self.zx + 60, self.zy + 80
-    #
-    # def handle_collision(self, other, group):
-    #     if group == 'player:zombie':
-    #         if self.dead == 0: # 죽은 좀비들은 피격판정 x
-    #             if other.attack == 0: # IDLE 상태의 플레이어에게 접촉 시
-    #                 self.idle = 0
-    #                 self.attack = 1
-    #                 if other.invincible == 0 and self.zattack_frame == 7:
-    #                     other.hp -= 10  # 플레이어에게 데미지
-    #                     other.hit_time = get_time()  # 피격 시간 기록
-    #                     other.invincible = 1
-    #
-    #                 #print(other.hp)
-    #             else:
-    #                 pass
-    #
-    #             if other.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
-    #                 #print('hit!')
-    #                 if other.melee_frame == 2:
-    #                     if self.zdir == -1 and self.dead == 0 and other.face_dir == 1:
-    #                         self.hit_time = get_time()  # 피격 시간 기록
-    #                         self.hp -= 15  # 자기 자신에게 데미지
-    #                         self.hit = 1
-    #                         self.zx += 50
-    #                     elif self.zdir == 1 and self.dead == 0 and other.face_dir == -1:
-    #                         self.hit_time = get_time()  # 피격 시간 기록
-    #                         self.hp -= 15  # 자기 자신에게 데미지
-    #                         self.hit = 1
-    #                         self.zx -= 50
-    #                     print(self.hp)
-    #                 else:
-    #                     pass
-    # 미사용 코드
+
+    def handle_collision(self, other, group):
+        if group == 'player:zombie':
+            if self.dead == 0: # 죽은 좀비들은 피격판정 x
+                if other.attack == 0: # IDLE 상태의 플레이어에게 접촉 시
+                    self.idle = 0
+                    self.attack = 1
+                    if other.invincible == 0 and self.atkchance == True:
+                        self.atkchance = False
+                        other.hp -= 10  # 플레이어에게 데미지
+                        other.hit_time = get_time()  # 피격 시간 기록
+                        other.invincible = 1
+
+                    #print(other.hp)
+                else:
+                    pass
+
+                if other.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
+                    #print('hit!')
+                    if other.atkchance == True:
+                        if self.zdir == -1 and self.dead == 0 and other.face_dir == 1:
+                            self.hit_time = get_time()  # 피격 시간 기록
+                            self.hp -= 15  # 자기 자신에게 데미지
+                            self.hit = 1
+                            self.zx += 50
+                        elif self.zdir == 1 and self.dead == 0 and other.face_dir == -1:
+                            self.hit_time = get_time()  # 피격 시간 기록
+                            self.hp -= 15  # 자기 자신에게 데미지
+                            self.hit = 1
+                            self.zx -= 50
+                        print(self.hp)
+                    else:
+                        pass
 
 
 

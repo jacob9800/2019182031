@@ -3,6 +3,7 @@ import play_state
 from zombieclass import NormalZombie
 import game_framework
 import game_world
+from items_class import Itembox
 
 zombie = None
 class Map:

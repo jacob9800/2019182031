@@ -34,6 +34,7 @@ FRAMES_PER_ACTION = 8 # 이동 시 프레임
 FRAMES_PER_IDLE = 10 # 대기 시 프레임
 FRAMES_PER_MELEE = 10
 FRAMES_PER_SHOOT = 5 # 사격 시 프레임
+FRAMES_PER_FIRE = 5
 
 # 스테이트를 구현(class를 이용해서)
 class IDLE:
@@ -82,6 +83,7 @@ class SHOOT:
     @staticmethod
     def enter(self, event):
         #print("ENTER SHOOT")
+        self.fire = True
         self.dir = 0
 
     @staticmethod
@@ -93,9 +95,13 @@ class SHOOT:
     @staticmethod
     def do(self):
         self.shoot_frame = (self.shoot_frame + FRAMES_PER_SHOOT * ACTION_PER_TIME * game_framework.frame_time) % 5
+        self.fire_frame = (self.shoot_frame + FRAMES_PER_FIRE * ACTION_PER_TIME * game_framework.frame_time) % 4
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1: # 피격시 2초가량 무적 제공
             self.invincible = 0
+
+        if int(self.fire_frame) >= 3:
+            self.fire = False
 
     @staticmethod
     def draw(self):
@@ -116,6 +122,12 @@ class SHOOT:
                     self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
                 elif int(self.shoot_frame) % 2 == 0:
                     self.invis_image.draw(self.x, self.y)
+
+        if self.fire == True:
+            if self.face_dir == 1:
+                self.rfire_image.clip_draw(int(self.fire_frame) * 40, 0, 40, 40, self.x + 70, self.y)
+            elif self.face_dir == -1:
+                self.lfire_image.clip_draw(int(self.fire_frame) * 40, 0, 40, 40, self.x - 70, self.y)
 
 class RUN:
     @staticmethod
@@ -248,6 +260,7 @@ class Player:
         self.idle_frame = 0  # 정지 시 프레임
         self.shoot_frame = 0  # 사격 시 프레임
         self.melee_frame = 0
+        self.fire_frame = 0
         self.dir = 1  # 1: 오른쪽, -1: 왼쪽
         self.face_dir = 1 # 1: 오른쪽, -1: 왼쪽
         self.idle = 0  # 0: 정지 상태, 1: 이동 상태
@@ -255,6 +268,9 @@ class Player:
         self.shoot = 0  # 0: 무기 없음, 1: 발사
         self.hp = 100  # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0  # 0일시 피격 가능, 1일시 무적 상태
+        self.gettime = 0 # 아이템 습득 시간
+        self.boxtype = 0 # 습득 박스 종류
+        self.fire = False # 사격 시 불꽃 출력
         self.right_image = load_image('Sprites/Player/player_right_run.png')
         self.left_image = load_image('Sprites/Player/player_left_run.png')
         self.ridle_image = load_image('Sprites/Player/player_right_idle.png')
@@ -266,6 +282,9 @@ class Player:
         self.rslash_image = load_image('Sprites/Effect/slasheffect_right.png')
         self.lslash_image = load_image('Sprites/Effect/slasheffect_left.png')
         self.invis_image = load_image('Sprites/Player/invisible.png')
+        self.rfire_image = load_image('Sprites/Effect/fire_right.png')
+        self.lfire_image = load_image('Sprites/Effect/fire_left.png')
+        self.font = load_font('Fonts/154_Impact.ttf')
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
@@ -285,7 +304,21 @@ class Player:
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
+
+        if self.current_time - self.gettime <= 1:
+            if self.boxtype == 5:
+                if self.hp < 50:
+                    self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(HP +50)', (0, 255, 0))
+                else :
+                    self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(HP FULLY CHARGED!)', (0, 255, 0))
+            elif self.boxtype == 0:
+                self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(TENNISBALL RECHARGED!)', (255, 255, 255))
+            elif self.boxtype == 1:
+                self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(COLA RECHARGED!)', (255, 255, 255))
+
+
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -299,18 +332,16 @@ class Player:
         if self.bulletmod == 0 :  # 탄환 종류 선택
             if play_state.tennis_mag > 0:
                 ball = Tennis(self.x + 50 * self.face_dir, self.y, self.face_dir)
-                play_state.tennisball.append(ball) # 충돌 감지용 리스트에 탄환 값 전달
-                game_world.add_object(ball, 2) # 게임 월드에 탄환 추가
-                #game_world.add_collision_pairs(play_state.n_zombie, play_state.tennisball, 'zombie:tennis')
+                game_world.add_object(ball, 3) # 게임 월드에 탄환 추가
+                game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:tennis')
                 play_state.tennis_mag -= 1  # 보유 탄환 1 감소
             else:
                 print("총알 없음!")
         elif self.bulletmod == 1 :
             if play_state.cola_mag > 0:
                 bottle = Cola(self.x + 70 * self.face_dir, self.y, self.face_dir)
-                play_state.cola.append(bottle) # 충돌 감지용 리스트에 탄환 값 전달
-                game_world.add_object(bottle, 2) # 게임 월드에 탄환 추가
-                #game_world.add_collision_pairs(play_state.n_zombie, play_state.cola, 'zombie:cola')
+                game_world.add_object(bottle, 3) # 게임 월드에 탄환 추가
+                game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:cola')
                 play_state.cola_mag -= 1
             else:
                 print("총알 없음!")
