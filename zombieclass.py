@@ -70,23 +70,26 @@ class NormalZombie:
         elif play_state.player.x < self.zx and self.dead == 0:
             self.zdir = -1
 
-        if self.zx > play_state.gamemap.mapsize:
-            self.zx = play_state.gamemap.mapsize
-            self.zdir = -1
-        elif self.zx < 0:
-            self.zx = 0
-            self.zdir = 1
-        else:
-            if self.idle == 1:
-                self.zx += self.zdir * ZRUN_SPEED_PPS * game_framework.frame_time * self.speed # 플레이어의 x 좌표에 따라서 이동 방향 변경
+        if self.dead == 0:
+            if self.zx > play_state.gamemap.mapsize:
+                self.zx = play_state.gamemap.mapsize
+                self.zdir = -1
+            elif self.zx < 0:
+                self.zx = 0
+                self.zdir = 1
+            elif self.hp <= 0 : # 좀비 사망 감지 코드
+                self.dead = 1
+                self.idle = 0
+                self.dead_time = get_time()
+                play_state.killcount += 1
             else:
-                self.zx = self.zx
+                if self.idle == 1:
+                    self.zx += self.zdir * ZRUN_SPEED_PPS * game_framework.frame_time * self.speed # 플레이어의 x 좌표에 따라서 이동 방향 변경
+                else:
+                    self.zx = self.zx
 
-        if self.hp <= 0 and self.dead == 0: # 좀비 사망 감지 코드
-            self.dead = 1
-            self.idle = 0
-            self.dead_time = get_time()
-            play_state.killcount += 1
+        if int(self.zattack_frame) == 0 and self.dead == 0:
+            self.atkchance = True
 
         if (self.current_time - self.dead_time >= 0.5) and self.dead == 1: # 사망 1초 경과시 화면에서 제거 후 삭제 대기 상태로 전환
             self.dead = 2
@@ -95,10 +98,7 @@ class NormalZombie:
         if self.dead == 2: # 삭제 대기 중인 객체 확인 후 제거
             play_state.n_zombie.remove(self)
             game_world.remove_object(self)
-            play_state.zombie_num -= 1
-
-        if int(self.zattack_frame) == 0:
-            self.atkchance = True
+            del self
 
     def draw(self):
         draw_rectangle(*self.get_bb())

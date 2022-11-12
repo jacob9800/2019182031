@@ -8,6 +8,7 @@ import time
 from zombieclass import NormalZombie
 from bulletclass import Tennis, Cola
 from player_class import Player
+from items_class import Itembox
 import game_world
 
 
@@ -37,18 +38,19 @@ running = True
 n_zombie = None
 tennisball = None
 cola = None
+item = None
 tennis_mag = 30
 cola_mag = 7
 killcount = 0
-zombie_num = 0
 
 def enter():
-    global player, gamemap, n_zombie, running, tennisball, cola
+    global player, gamemap, n_zombie, running, tennisball, cola, item
     gamemap = Map()
     player = Player()
     n_zombie = []
     tennisball = []
     cola = []
+    item = []
     game_world.add_object(gamemap, 0)
     game_world.add_object(player, 1)
     game_world.add_objects(n_zombie, 1)
@@ -56,8 +58,8 @@ def enter():
 
 # 게임 종료 함수
 def exit():
-    global player, gamemap, n_zombie, tennisball, cola
-    del player, gamemap, n_zombie, tennisball, cola
+    global player, gamemap, n_zombie, tennisball, cola, item
+    del player, gamemap, n_zombie, tennisball, cola, item
 
 def update():
     for game_object in game_world.all_objects():
@@ -76,10 +78,15 @@ def update():
         for bottle in cola:
             bottle.collide(zombie)
 
+    for box in item:
+        if collide(player, box):
+            box.collision(player)
+
+
     if player.hp <= 0:
         game_framework.change_state(game_over_state)
 
-    ZombieSpawn()
+    Spawn()
 
 
 
@@ -111,9 +118,14 @@ def collide(a, b):
 
     return True
 
-def ZombieSpawn():
-    global zombie_num
+def Spawn():
     if len(n_zombie) <= 2:
         zombie = NormalZombie()
         n_zombie.append(zombie)
         game_world.add_object(zombie, 1)
+
+    if len(item) < 3:
+        box = Itembox()
+        item.append(box)
+        game_world.add_object(box, 2)
+
