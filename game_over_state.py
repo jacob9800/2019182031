@@ -2,6 +2,7 @@ import game_framework
 from pico2d import *
 import title_state
 import play_state
+import game_world
 
 
 image = None
@@ -12,9 +13,9 @@ def enter():
     pass
 
 def exit():
+    game_world.clear()
     global image
     del image
-    pass
 
 def update():
     pass

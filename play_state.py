@@ -29,8 +29,6 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_2):
             player.bulletmod = 1
             print("콜라")
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_0):
-            game_framework.change_state(game_over_state)
         else:
             player.handle_event(event)
 
@@ -48,11 +46,9 @@ bowling_mag = 5
 killcount = 0
 
 def enter():
-    global player, gamemap, n_zombie, running, tennisball, cola, item
+    global player, gamemap, n_zombie, running
     gamemap = Map()
     player = Player()
-    tennisball = []
-    cola = []
 
     game_world.add_object(gamemap, 0)
     game_world.add_object(player, 1)
@@ -63,8 +59,7 @@ def enter():
 
 # 게임 종료 함수
 def exit():
-    global player, gamemap, n_zombie, tennisball, cola, item
-    del player, gamemap, n_zombie, tennisball, cola, item
+    game_world.clear()
 
 def update():
     schedule.run_pending()

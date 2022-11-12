@@ -40,6 +40,7 @@ class Itembox:
         self.y = 550
         self.boxmod = random.randint(0,7) # 0 ~ 4 = 박스,  5 ~ 7 : 메디킷
         self.collidable = False
+        self.delete = 0
 
 
     def update(self):
@@ -48,6 +49,9 @@ class Itembox:
         if self.y <= 60:
             self.y = 60
             self.collidable = True
+
+        if self.delete == 1:
+            game_world.remove_object(self)
 
 
     def draw(self):
@@ -76,22 +80,22 @@ class Itembox:
                         player.hp = 100
                     player.gettime = get_time()
                     player.boxtype = 5
-                    game_world.remove_object(self)
-                    del self
+                    self.delete = 1
+
                 elif 0 <= self.boxmod <= 4:
                     if self.boxmod == 0 or 2 <= self.boxmod <= 4:
                         player.gettime = get_time()
                         player.boxtype = 0
                         play_state.tennis_mag = 30
-                        game_world.remove_object(self)
-                        del self
+                        self.delete = 1
+
                     elif self.boxmod == 1:
                         player.gettime = get_time()
                         player.boxtype = 1
                         play_state.cola_mag = 7
                         #play_state.item.remove(self)
-                        game_world.remove_object(self)
-                        del self
+                        self.delete = 1
+
             else:
                 pass
 

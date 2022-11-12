@@ -33,6 +33,7 @@ def clear():
         del o
     for layer in objects:
         layer.clear()
+    collision_group.clear()
 
 def add_collision_pairs(a,b,group):
     if group not in collision_group:

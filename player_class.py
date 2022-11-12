@@ -266,7 +266,7 @@ class Player:
         self.idle = 0  # 0: 정지 상태, 1: 이동 상태
         self.attack = 0  # 0: 대기 상태, 1: 근공 실행
         self.shoot = 0  # 0: 무기 없음, 1: 발사
-        self.hp = 100  # 플레이어 HP, 0이 될 경우 패배창 출력
+        self.hp = 10  # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0  # 0일시 피격 가능, 1일시 무적 상태
         self.gettime = 0 # 아이템 습득 시간
         self.boxtype = 0 # 습득 박스 종류
@@ -291,6 +291,9 @@ class Player:
 
     def update(self):
         self.cur_state.do(self)
+
+        if self.hp <= 0:
+            game_world.remove_object(self)
 
         if self.event_que:
             event = self.event_que.pop()
