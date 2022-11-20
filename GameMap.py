@@ -23,24 +23,31 @@ class Map:
         self.font.draw(10, 550, f'(HP: {play_state.player.hp})', (255, 255, 255))  # 플레이어 HP 출력
         self.font.draw(10, 500,  f'(KILLCOUNT: {play_state.killcount})', (255, 255, 255)) # 킬 점수 출력
 
-        if play_state.player.bulletmod == 0: # 탄환 종류, 남은 잔여 탄환 개수 출력
-            if play_state.tennis_mag > 5:
-                self.font.draw(10, 525, f'(TENNISBALL | {play_state.tennis_mag}/30)', (255, 255, 255))  # 테니스볼 개수 출력
-            elif play_state.tennis_mag <= 5:
-                self.font.draw(10, 525, f'(TENNISBALL | {play_state.tennis_mag}/30)', (255, 0, 0))  # 테니스볼 개수 출력
-                self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
-        elif play_state.player.bulletmod == 1:
-            if play_state.cola_mag > 2:
-                self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 255, 255))  # 콜라병 개수 출력
-            elif play_state.cola_mag <= 2:
-                self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 0, 0))  # 콜라병 개수 출력
-                self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
-        elif play_state.player.bulletmod == 2:
-            if play_state.bowling_mag > 2:
-                self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 255, 255))  # 볼링공 개수 출력
-            elif play_state.bowling_mag <= 2:
-                self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 0, 0))  # 볼링공 개수 출력
-                self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+        if play_state.juggernaut == 30:
+            self.font.draw(10, 475, f'[!JUGGERNAUT READY!]', (255, 255, 0))  # 킬 점수 출력
+
+        if play_state.player.transform == 0:
+            if play_state.player.bulletmod == 0: # 탄환 종류, 남은 잔여 탄환 개수 출력
+                if play_state.tennis_mag > 5:
+                    self.font.draw(10, 525, f'(TENNISBALL | {play_state.tennis_mag}/30)', (255, 255, 255))  # 테니스볼 개수 출력
+                elif play_state.tennis_mag <= 5:
+                    self.font.draw(10, 525, f'(TENNISBALL | {play_state.tennis_mag}/30)', (255, 0, 0))  # 테니스볼 개수 출력
+                    self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+            elif play_state.player.bulletmod == 1:
+                if play_state.cola_mag > 2:
+                    self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 255, 255))  # 콜라병 개수 출력
+                elif play_state.cola_mag <= 2:
+                    self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 0, 0))  # 콜라병 개수 출력
+                    self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+            elif play_state.player.bulletmod == 2:
+                if play_state.bowling_mag > 2:
+                    self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 255, 255))  # 볼링공 개수 출력
+                elif play_state.bowling_mag <= 2:
+                    self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 0, 0))  # 볼링공 개수 출력
+                    self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+        elif play_state.player.transform == 1:
+            self.font.draw(10, 525, f'(6.8mm XM1186 | INFINITE)', (255, 255, 0))  # 볼링공 개수 출력
+
 
     def update(self):
         pass

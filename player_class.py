@@ -3,10 +3,12 @@ import play_state
 from bulletclass import Tennis
 from bulletclass import Cola
 from bulletclass import Bowling
+from bulletclass import Bullet
 import time
 import game_over_state
 import game_framework
 import game_world
+import schedule
 
 # 이벤트 정리
 RD, LD, RU, LU, SHOOTIN, SHOOTOUT, MELEEOUT, MELEEIN = range(8)
@@ -271,8 +273,10 @@ class Player:
         self.invincible = 0  # 0일시 피격 가능, 1일시 무적 상태
         self.gettime = 0 # 아이템 습득 시간
         self.boxtype = 0 # 습득 박스 종류
-        self.injure = 0 # 체력 50 이하 시 1로 변경
         self.medcheck = 0 # 1일시 메디킷 체력 50 이하 메시지 출력
+        self.transform = 0 # 0일시 통상 상태, 1일시 저거넛 모드
+        self.transform_time = 0 # 모드 지속 시간, 10초 경과시 해제
+        self.autofire = False # 자동 사격 기능, True일시 자동 사격
         self.fire = False # 사격 시 불꽃 출력
         self.right_image = load_image('Sprites/Player/player_right_run.png')
         self.left_image = load_image('Sprites/Player/player_left_run.png')
@@ -297,6 +301,10 @@ class Player:
 
         if self.hp <= 0:
             game_world.remove_object(self)
+
+        if self.transform == 1 and self.current_time - self.transform_time > 15:
+            self.transform = 0
+            self.transform_time = 0
 
         if self.event_que:
             event = self.event_que.pop()
@@ -325,6 +333,10 @@ class Player:
             elif self.boxtype == 2:
                 self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(BOWLING RECHARGED!)', (255, 255, 255))
 
+        if self.transform == 1 and self.current_time - self.transform_time <= 15:
+            self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'[!JUGGERNAUT ACTIVATED! : {15 - int(self.current_time - self.transform_time)}]', (255, 0, 0))
+
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -335,28 +347,40 @@ class Player:
             self.add_event(key_event)
 
     def shoot_bullet(self):
-        if self.bulletmod == 0 :  # 탄환 종류 선택
-            if play_state.tennis_mag > 0:
-                ball = Tennis(self.x + 50 * self.face_dir, self.y, self.face_dir)
-                game_world.add_object(ball, 3) # 게임 월드에 탄환 추가
-                game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:tennis')
-                play_state.tennis_mag -= 1  # 보유 탄환 1 감소
-            else:
-                print("총알 없음!")
-        elif self.bulletmod == 1 :
-            if play_state.cola_mag > 0:
-                bottle = Cola(self.x + 70 * self.face_dir, self.y, self.face_dir)
-                game_world.add_object(bottle, 3) # 게임 월드에 탄환 추가
-                game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:cola')
-                play_state.cola_mag -= 1
-        elif self.bulletmod == 2:
-            if play_state.bowling_mag > 0:
-                bowlingball = Bowling(self.x + 70 * self.face_dir, self.y, self.face_dir)
-                game_world.add_object(bowlingball, 3)  # 게임 월드에 탄환 추가
-                game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bowling')
-                play_state.bowling_mag -= 1
-            else:
-                print("총알 없음!")
+        if self.transform == 0: # 변신 상태가 아닐 때
+            if self.bulletmod == 0 :  # 탄환 종류 선택
+                if play_state.tennis_mag > 0:
+                    ball = Tennis(self.x + 50 * self.face_dir, self.y, self.face_dir)
+                    game_world.add_object(ball, 3) # 게임 월드에 탄환 추가
+                    game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:tennis')
+                    play_state.tennis_mag -= 1  # 보유 탄환 1 감소
+                else:
+                    print("총알 없음!")
+            elif self.bulletmod == 1 :
+                if play_state.cola_mag > 0:
+                    bottle = Cola(self.x + 70 * self.face_dir, self.y, self.face_dir)
+                    game_world.add_object(bottle, 3) # 게임 월드에 탄환 추가
+                    game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:cola')
+                    play_state.cola_mag -= 1
+            elif self.bulletmod == 2:
+                if play_state.bowling_mag > 0:
+                    bowlingball = Bowling(self.x + 70 * self.face_dir, self.y, self.face_dir)
+                    game_world.add_object(bowlingball, 3)  # 게임 월드에 탄환 추가
+                    game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bowling')
+                    play_state.bowling_mag -= 1
+                else:
+                    print("총알 없음!")
+        elif self.transform == 1:
+            bullet = Bullet(self.x + 70 * self.face_dir, self.y, self.face_dir)
+            game_world.add_object(bullet, 3)  # 게임 월드에 탄환 추가
+            game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bullet')
+
+
+
+    def fullauto(self):
+        bullet = Bullet(self.x + 70 * self.face_dir, self.y, self.face_dir)
+        game_world.add_object(bullet, 3)  # 게임 월드에 탄환 추가
+        game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bullet')
 
     def get_bb(self):
         if self.attack == 0:
@@ -366,3 +390,4 @@ class Player:
 
     def handle_collision(self, other, group):
         pass
+

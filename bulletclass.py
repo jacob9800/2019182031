@@ -140,10 +140,8 @@ class Bowling:
 
     def draw(self):
         self.bowling_image.draw(self.x, self.y)
-        draw_rectangle(*self.get_bb())
-        if self.x <= 20 or self.x >= 1000:
-            game_world.remove_object(self) # 게임 월드에서 오브젝트 삭제
-            del self # 메모리 삭제
+        #draw_rectangle(*self.get_bb())
+
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25
 
@@ -162,4 +160,50 @@ class Bowling:
                     other.zx += 100
 
                 if self.count == 10:
+                    self.delete = 1
+
+class Bullet:
+    bullet_image = None
+
+    def __init__(self, x = 0, y = 0, dir = 1):
+
+        if Bullet.bullet_image == None:
+            Bullet.bullet_image = load_image('Sprites/Bullet/bullet.png')
+
+        self.speed = 100
+        self.x = x
+        self.y = y
+        self.dir = dir
+        self.count = 0
+        self.delete = 0
+
+    def update(self):
+        self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
+        if self.x <= 20 or self.x >= 1000:
+            self.delete = 1
+
+        if self.delete == 1:
+            game_world.remove_object(self)
+
+    def draw(self):
+        self.bullet_image.draw(self.x, self.y)
+        #draw_rectangle(*self.get_bb())
+    def get_bb(self):
+        return self.x - 30, self.y - 11, self.x + 30, self.y + 11
+
+    def handle_collision(self, other, group):
+        if group == 'zombie:bullet':
+            if play_state.bowling_mag >= 0 and other.dead == 0:
+                if other.hit == 0:
+                    other.hp -= 40
+                    other.hit = 1
+                    other.hit_time = get_time()
+                    self.count += 1
+                print("좀비 체력 : ", other.hp)
+                if other.zdir == 1:
+                    other.zx -= 10
+                elif other.zdir == -1:
+                    other.zx += 10
+
+                if self.count == 3:
                     self.delete = 1

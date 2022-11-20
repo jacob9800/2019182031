@@ -14,7 +14,7 @@ import schedule
 
 
 def handle_events():
-    global running, tennis_mag, cola_mag, bulletmod
+    global running, tennis_mag, cola_mag, bulletmod, juggernaut
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -24,7 +24,14 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
             game_framework.push_state(pause_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_x):
-            pass
+            player.transform = 1
+            # if juggernaut == 30:
+            #     juggernaut = 0
+            #     player.transform = 1
+            #     player.transform_time = get_time()
+            # else:
+            #     pass
+
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
             player.bulletmod = 0
             print("테니스공")
@@ -134,6 +141,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:tennis') # 테니스 피격
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bullet')  # 탄환 피격
     elif stagelev == 2:
         for i in range(6):
             if spawnleft:
@@ -147,6 +155,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:tennis') # 테니스 피격
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bullet')  # 탄환 피격
     elif stagelev == 3:
         for i in range(7):
             if spawnleft:
@@ -160,6 +169,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:tennis') # 테니스 피격
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bullet')  # 탄환 피격
 
 def itemspawn():
     if len(game_world.objects[4]) <= 3: # 최대 4개까지 스폰
