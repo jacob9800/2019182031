@@ -35,6 +35,12 @@ class Map:
             elif play_state.cola_mag <= 2:
                 self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 0, 0))  # 콜라병 개수 출력
                 self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+        elif play_state.player.bulletmod == 2:
+            if play_state.bowling_mag > 2:
+                self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 255, 255))  # 볼링공 개수 출력
+            elif play_state.bowling_mag <= 2:
+                self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 0, 0))  # 볼링공 개수 출력
+                self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
 
     def update(self):
         pass

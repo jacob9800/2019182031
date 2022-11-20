@@ -75,15 +75,17 @@ class Itembox:
                 if 5 <= self.boxmod <= 7 and player.hp < 100:
                     #print(self.boxmod, '메디킷 획득')
                     if player.hp <= 50:
+                        player.medcheck = 1
                         player.hp += 50
                     elif 100 > player.hp > 50:
+                        player.medcheck = 0
                         player.hp = 100
                     player.gettime = get_time()
                     player.boxtype = 5
                     self.delete = 1
 
                 elif 0 <= self.boxmod <= 4:
-                    if self.boxmod == 0 or 2 <= self.boxmod <= 4:
+                    if self.boxmod == 0 or 3 <= self.boxmod <= 4:
                         player.gettime = get_time()
                         player.boxtype = 0
                         play_state.tennis_mag = 30
@@ -93,8 +95,14 @@ class Itembox:
                         player.gettime = get_time()
                         player.boxtype = 1
                         play_state.cola_mag = 7
-                        #play_state.item.remove(self)
                         self.delete = 1
+
+                    elif self.boxmod == 2:
+                        player.gettime = get_time()
+                        player.boxtype = 2
+                        play_state.bowling_mag = 5
+                        self.delete = 1
+
 
             else:
                 pass

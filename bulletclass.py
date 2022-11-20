@@ -27,6 +27,8 @@ class Tennis:
 
     def update(self):
         self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
+        if self.x <= 20 or self.x >= 1000:
+            self.delete = 1
 
         if self.delete == 1:
             game_world.remove_object(self)
@@ -34,9 +36,8 @@ class Tennis:
     def draw(self):
         self.tennis_image.draw(self.x, self.y)
         draw_rectangle(*self.get_bb())
-        if self.x <= 20 or self.x >= 1000:
-            game_world.remove_object(self) # 게임 월드에서 오브젝트 삭제
-            del self # 메모리 삭제
+
+
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
 
@@ -79,9 +80,8 @@ class Cola:
 
     def update(self):
         self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
-        if self.x <= 0 or self.x >= 1000:
-            game_world.remove_object(self)
-            del self  # 메모리 삭제
+        if self.x <= 20 or self.x >= 1000:
+            self.delete = 1
 
         if self.delete == 1:
             game_world.remove_object(self)
@@ -93,26 +93,6 @@ class Cola:
         elif self.dir == 1:
             self.coke_r_image.draw(self.x, self.y)
 
-    def collide(self, zombie):
-        if zombie.zx - 40 <= self.x <= zombie.zx + 40 and play_state.cola_mag >= 0 and zombie.dead == 0:
-            self.count += 1
-            if self.count <= 1:
-                zombie.hp -= 5
-            zombie.hit = 1
-            zombie.hit_time = get_time()
-            if zombie.speed > 1:
-                zombie.speed /= 2
-            print("좀비 체력 : ", zombie.hp)
-            if zombie.zdir == 1:
-                zombie.zx -= 20
-            elif zombie.zdir == -1:
-                zombie.zx += 20
-
-            if self.count == 5:
-                if self.count == 5:  # 5명 이상의 좀비 타격 시
-                    game_world.remove_object(self)
-                    play_state.cola.remove(self)
-                    del self
     def get_bb(self):
         return self.x - 20, self.y - 10, self.x + 45, self.y + 10
 
@@ -134,4 +114,51 @@ class Cola:
                 if self.count == 5:  # 5명 이상의 좀비 타격 시
                     self.delete = 1
 
+class Bowling:
+    bowling_image = None
 
+    def __init__(self, x = 0, y = 0, dir = 1):
+
+        if Bowling.bowling_image == None:
+            Bowling.bowling_image = load_image('Sprites/Bullet/bowling_ball.png')
+
+        self.speed = 80
+        self.x = x
+        self.y = y
+        self.dir = dir
+        self.count = 0
+        self.delete = 0
+
+    def update(self):
+        self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
+        if self.x <= 20 or self.x >= 1000:
+            self.delete = 1
+
+        if self.delete == 1:
+            game_world.remove_object(self)
+
+    def draw(self):
+        self.bowling_image.draw(self.x, self.y)
+        draw_rectangle(*self.get_bb())
+        if self.x <= 20 or self.x >= 1000:
+            game_world.remove_object(self) # 게임 월드에서 오브젝트 삭제
+            del self # 메모리 삭제
+    def get_bb(self):
+        return self.x - 25, self.y - 25, self.x + 25, self.y + 25
+
+    def handle_collision(self, other, group):
+        if group == 'zombie:bowling':
+            if play_state.bowling_mag >= 0 and other.dead == 0:
+                if other.hit == 0:
+                    other.hp -= 65
+                    other.hit = 1
+                    other.hit_time = get_time()
+                    self.count += 1
+                print("좀비 체력 : ", other.hp)
+                if other.zdir == 1:
+                    other.zx -= 100
+                elif other.zdir == -1:
+                    other.zx += 100
+
+                if self.count == 10:
+                    self.delete = 1

@@ -2,6 +2,7 @@ from pico2d import *
 import play_state
 from bulletclass import Tennis
 from bulletclass import Cola
+from bulletclass import Bowling
 import time
 import game_over_state
 import game_framework
@@ -266,10 +267,12 @@ class Player:
         self.idle = 0  # 0: 정지 상태, 1: 이동 상태
         self.attack = 0  # 0: 대기 상태, 1: 근공 실행
         self.shoot = 0  # 0: 무기 없음, 1: 발사
-        self.hp = 10  # 플레이어 HP, 0이 될 경우 패배창 출력
+        self.hp = 30  # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0  # 0일시 피격 가능, 1일시 무적 상태
         self.gettime = 0 # 아이템 습득 시간
         self.boxtype = 0 # 습득 박스 종류
+        self.injure = 0 # 체력 50 이하 시 1로 변경
+        self.medcheck = 0 # 1일시 메디킷 체력 50 이하 메시지 출력
         self.fire = False # 사격 시 불꽃 출력
         self.right_image = load_image('Sprites/Player/player_right_run.png')
         self.left_image = load_image('Sprites/Player/player_left_run.png')
@@ -311,16 +314,16 @@ class Player:
 
         if self.current_time - self.gettime <= 1:
             if self.boxtype == 5:
-                if self.hp < 50:
+                if self.medcheck == 1:
                     self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(HP +50)', (0, 255, 0))
-                else :
+                elif self.medcheck == 0:
                     self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(HP FULLY CHARGED!)', (0, 255, 0))
             elif self.boxtype == 0:
                 self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(TENNISBALL RECHARGED!)', (255, 255, 255))
             elif self.boxtype == 1:
                 self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(COLA RECHARGED!)', (255, 255, 255))
-
-
+            elif self.boxtype == 2:
+                self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(BOWLING RECHARGED!)', (255, 255, 255))
 
 
     def add_event(self, event):
@@ -346,6 +349,12 @@ class Player:
                 game_world.add_object(bottle, 3) # 게임 월드에 탄환 추가
                 game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:cola')
                 play_state.cola_mag -= 1
+        elif self.bulletmod == 2:
+            if play_state.bowling_mag > 0:
+                bowlingball = Bowling(self.x + 70 * self.face_dir, self.y, self.face_dir)
+                game_world.add_object(bowlingball, 3)  # 게임 월드에 탄환 추가
+                game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bowling')
+                play_state.bowling_mag -= 1
             else:
                 print("총알 없음!")
 

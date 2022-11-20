@@ -26,8 +26,8 @@ class NormalZombie:
     rdead_image = None
     ldead_image = None
     blood_image = None
-    def __init__(self):
-        self.zx, self.zy = 0.0, 100.0  # 좀비 좌표
+    def __init__(self, HP = 50, ATK = 10, SPAWN = 0):
+        self.zx, self.zy = SPAWN, 100.0  # 좀비 좌표
         self.atkchance = False
         self.dead_time = 0 # 사망 시간
         self.hit_time = 0 # 피격 시간
@@ -42,7 +42,8 @@ class NormalZombie:
         self.attack = 0  # 0: 무반응, 1: 공격
         self.dead = 0 # 0: 생존, 1: 사망, 2: 사망(삭제 필요)
         self.speed = random.randint(100,200) / 100
-        self.hp = 50  # 좀비 HP, 0이 될 경우 사망 애니메이션 출력
+        self.hp = HP  # 좀비 HP, 0이 될 경우 사망 애니메이션 출력
+        self.dmg = ATK # 좀비 공격력, 스테이지별로 증가
         if NormalZombie.right_image == None:
             NormalZombie.right_image = load_image('Sprites/Zombie_male/zombie_right_walk.png')
         if NormalZombie.left_image == None:
@@ -82,6 +83,8 @@ class NormalZombie:
                 self.idle = 0
                 self.dead_time = get_time()
                 play_state.killcount += 1
+                if play_state.juggernaut < 30:
+                    play_state.juggernaut += 1
             else:
                 if self.idle == 1:
                     self.zx += self.zdir * ZRUN_SPEED_PPS * game_framework.frame_time * self.speed # 플레이어의 x 좌표에 따라서 이동 방향 변경
@@ -96,7 +99,6 @@ class NormalZombie:
             print(play_state.killcount, "번 좀비 사망")
 
         if self.dead == 2: # 삭제 대기 중인 객체 확인 후 제거
-            #play_state.n_zombie.remove(self)
             game_world.remove_object(self)
             del self
 
@@ -139,39 +141,6 @@ class NormalZombie:
                 self.attack = 0
                 self.idle = 1
 
-    # def collision(self, player):
-    #     if self.dead == 0:  # 죽은 좀비들은 피격판정 x
-    #         if player.attack == 0:  # IDLE 상태의 플레이어에게 접촉 시
-    #             self.idle = 0
-    #             self.attack = 1
-    #             if player.invincible == 0 and self.atkchance == True:
-    #                 self.atkchance = False
-    #                 player.hp -= 10  # 플레이어에게 데미지
-    #                 player.hit_time = get_time()  # 피격 시간 기록
-    #                 player.invincible = 1
-    #
-    #             print(player.hp)
-    #         else:
-    #             pass
-    #
-    #         if player.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
-    #             # print('hit!')
-    #             if player.atkchance == True:
-    #                 if self.zdir == -1 and self.dead == 0 and player.face_dir == 1:
-    #                     self.hit_time = get_time()  # 피격 시간 기록
-    #                     self.hp -= 15  # 자기 자신에게 데미지
-    #                     self.hit = 1
-    #                     self.zx += 50
-    #                 elif self.zdir == 1 and self.dead == 0 and player.face_dir == -1:
-    #                     self.hit_time = get_time()  # 피격 시간 기록
-    #                     self.hp -= 15  # 자기 자신에게 데미지
-    #                     self.hit = 1
-    #                     self.zx -= 50
-    #                 player.atkchance = False
-    #                 print(self.hp)
-    #             else:
-    #                 pass
-
     def get_bb(self):
         return self.zx - 60, self.zy - 80, self.zx + 60, self.zy + 80
 
@@ -183,7 +152,7 @@ class NormalZombie:
                     self.attack = 1
                     if other.invincible == 0 and self.atkchance == True:
                         self.atkchance = False
-                        other.hp -= 10  # 플레이어에게 데미지
+                        other.hp -= self.dmg  # 플레이어에게 데미지
                         other.hit_time = get_time()  # 피격 시간 기록
                         other.invincible = 1
 
