@@ -12,7 +12,7 @@ ZRUN_SPEED_MPS = (ZRUN_SPEED_MPM / 60.0)
 ZRUN_SPEED_PPS = (ZRUN_SPEED_MPS * ZPIXEL_PER_METER)
 
 ZTIME_PER_ACTION = 0.9
-BLOOD_PER_ACTION = 0.05 # 출혈 속도
+BLOOD_PER_ACTION = 1.5 # 출혈 속도
 ZACTION_PER_TIME = 1.0 / ZTIME_PER_ACTION
 BLOOD_PER_TIME = 1.0 / BLOOD_PER_ACTION
 ZFRAMES_PER_ACTION = 8 # 공격, 출혈 시 프레임
@@ -35,6 +35,7 @@ class NormalZombie:
         self.counter = 0 # 프레임 카운터
         self.zmoving_frame = 0  # 이동, 사망 시 프레임
         self.zattack_frame = 0  # 공격 시 프레임
+        self.zdeath_frame = 0 # 사망 시 프레임
         self.blood_frame = 0 # 피격 시 프레임
         self.hit = 0 # 0 : 미피격 상태, 1 : 피격 상태
         self.zdir = 1  # 1: 오른쪽, -1: 왼쪽
@@ -62,6 +63,7 @@ class NormalZombie:
     def update(self):
         #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.zmoving_frame = (self.zmoving_frame + ZFRAMES_PER_MOVING * ZACTION_PER_TIME * game_framework.frame_time) % 10
+        self.zdeath_frame = (self.zdeath_frame + ZFRAMES_PER_MOVING * BLOOD_PER_TIME * game_framework.frame_time) % 10
         self.zattack_frame = (self.zattack_frame + ZFRAMES_PER_ACTION * ZACTION_PER_TIME * game_framework.frame_time) % 8
         self.blood_frame = (self.blood_frame + BLOOD_PER_ACTION * BLOOD_PER_TIME * game_framework.frame_time) % 8
         self.current_time = get_time()
@@ -94,13 +96,11 @@ class NormalZombie:
         if int(self.zattack_frame) == 0 and self.dead == 0:
             self.atkchance = True
 
-        if (self.current_time - self.dead_time >= 0.5) and self.dead == 1: # 사망 1초 경과시 화면에서 제거 후 삭제 대기 상태로 전환
-            self.dead = 2
+        if (self.current_time - self.dead_time >= 0.5) and self.dead == 1: # 사망 1초 경과시 삭제
             print(play_state.killcount, "번 좀비 사망")
-
-        if self.dead == 2: # 삭제 대기 중인 객체 확인 후 제거
             game_world.remove_object(self)
-            del self
+
+
 
     def draw(self):
         #draw_rectangle(*self.get_bb())
@@ -111,10 +111,10 @@ class NormalZombie:
                 else:
                     self.rattack_image.clip_draw(int(self.zattack_frame) * 124, 0, 124, 150, self.zx, self.zy)
             elif self.dead == 1:
-                if self.counter <= 9:
-                    self.rdead_image.clip_draw(int(self.zmoving_frame) * 179, 0, 179, 150, self.zx, self.zy-20)
-                    self.counter += 1
+                if int(self.zdeath_frame) != 9 and self.counter == 0:
+                    self.rdead_image.clip_draw(int(self.zdeath_frame) * 179, 0, 179, 150, self.zx, self.zy-20)
                 else :
+                    self.counter = 1
                     self.rdead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
 
         elif self.zdir == -1:
@@ -124,10 +124,10 @@ class NormalZombie:
                 else:
                     self.lattack_image.clip_draw(int(self.zattack_frame) * 124, 0, 124, 150, self.zx, self.zy)
             elif self.dead == 1:
-                if self.counter <= 9:
-                    self.ldead_image.clip_draw(int(self.zmoving_frame) * 179, 0, 179, 150, self.zx, self.zy-20)
-                    self.counter += 1
+                if int(self.zdeath_frame) != 9 and self.counter == 0:
+                    self.ldead_image.clip_draw(int(self.zdeath_frame) * 179, 0, 179, 150, self.zx, self.zy-20)
                 else:
+                    self.counter = 1
                     self.ldead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
 
         if self.hit == 1 and self.dead == 0:

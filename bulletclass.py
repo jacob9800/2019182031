@@ -100,9 +100,10 @@ class Cola:
         if group == 'zombie:cola':
             if play_state.cola_mag >= 0 and other.dead == 0:
                 self.count += 1
-                other.hp -= 1
-                other.hit = 1
-                other.hit_time = get_time()
+                if other.hit == 0:
+                    other.hp -= 1
+                    other.hit = 1
+                    other.hit_time = get_time()
                 if other.speed > 1:
                     other.speed /= 2
                 print("좀비 체력 : ", other.hp)
