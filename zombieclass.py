@@ -150,7 +150,7 @@ class NormalZombie:
                 if other.attack == 0: # IDLE 상태의 플레이어에게 접촉 시
                     self.idle = 0
                     self.attack = 1
-                    if other.invincible == 0 and self.atkchance == True:
+                    if other.invincible == 0 and self.atkchance == True and other.transform == 0:
                         self.atkchance = False
                         other.hp -= self.dmg  # 플레이어에게 데미지
                         other.hit_time = get_time()  # 피격 시간 기록

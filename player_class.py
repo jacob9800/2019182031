@@ -65,22 +65,28 @@ class IDLE:
 
     @staticmethod
     def draw(self):
-        if self.invincible == 0:
-            if self.face_dir == 1:
-                self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
-            elif self.face_dir == -1:
-                self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
-        elif self.invincible == 1:
-            if self.face_dir == 1:
-                if int(self.idle_frame) % 2 != 0:
+        if self.transform == 0:
+            if self.invincible == 0:
+                if self.face_dir == 1:
                     self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.idle_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
-            elif self.face_dir == -1:
-                if int(self.idle_frame) % 2 != 0:
+                elif self.face_dir == -1:
                     self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.idle_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
+            elif self.invincible == 1:
+                if self.face_dir == 1:
+                    if int(self.idle_frame) % 2 != 0:
+                        self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.idle_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+                elif self.face_dir == -1:
+                    if int(self.idle_frame) % 2 != 0:
+                        self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.idle_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+        elif self.transform == 1:
+            if self.face_dir == 1:
+                self.ridle_jug.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+            elif self.face_dir == -1:
+                self.lidle_jug.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
 
 class SHOOT:
     @staticmethod
@@ -108,23 +114,28 @@ class SHOOT:
 
     @staticmethod
     def draw(self):
-
-        if self.invincible == 0:
-            if self.face_dir == 1:
-                self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
-            elif self.face_dir == -1:
-                self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
-        elif self.invincible == 1:
-            if self.face_dir == 1:
-                if int(self.shoot_frame) % 2 != 0:
+        if self.transform == 0:
+            if self.invincible == 0:
+                if self.face_dir == 1:
                     self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.shoot_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
-            elif self.face_dir == -1:
-                if int(self.shoot_frame) % 2 != 0:
+                elif self.face_dir == -1:
                     self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.shoot_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
+            elif self.invincible == 1:
+                if self.face_dir == 1:
+                    if int(self.shoot_frame) % 2 != 0:
+                        self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.shoot_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+                elif self.face_dir == -1:
+                    if int(self.shoot_frame) % 2 != 0:
+                        self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.shoot_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+        elif self.transform == 1:
+            if self.face_dir == 1:
+                self.rshoot_jug.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+            elif self.face_dir == -1:
+                self.lshoot_jug.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
 
         if self.fire == True:
             if self.face_dir == 1:
@@ -171,22 +182,28 @@ class RUN:
 
     @staticmethod
     def draw(self):
-        if self.invincible == 0:
-            if self.dir == 1:
-                self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
-            elif self.dir == -1:
-                self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
-        elif self.invincible == 1:
-            if self.dir == 1:
-                if int(self.moving_frame) % 2 != 0:
+        if self.transform == 0:
+            if self.invincible == 0:
+                if self.dir == 1:
                     self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.moving_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
-            elif self.dir == -1:
-                if int(self.moving_frame) % 2 != 0:
+                elif self.dir == -1:
                     self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.moving_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
+            elif self.invincible == 1:
+                if self.dir == 1:
+                    if int(self.moving_frame) % 2 != 0:
+                        self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.moving_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+                elif self.dir == -1:
+                    if int(self.moving_frame) % 2 != 0:
+                        self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.moving_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+        elif self.transform == 1:
+            if self.dir == 1:
+                self.right_jug.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+            elif self.dir == -1:
+                self.left_jug.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
 
 class MELEE:
     @staticmethod
@@ -214,30 +231,40 @@ class MELEE:
 
     @staticmethod
     def draw(self):
-        if self.invincible == 0:
-            if self.face_dir == 1:
-                self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
-                if int(self.melee_frame) >= 4:
-                    self.rslash_image.draw(self.x + 40, self.y)
-            elif self.face_dir == -1:
-                self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
-                if int(self.melee_frame) >= 4:
-                    self.lslash_image.draw(self.x - 40, self.y)
-        elif self.invincible == 1:
-            if self.face_dir == 1:
-                if int(self.melee_frame) % 2 != 0:
+        if self.transform == 0:
+            if self.invincible == 0:
+                if self.face_dir == 1:
                     self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.melee_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
+                    if int(self.melee_frame) >= 4:
+                        self.rslash_image.draw(self.x + 40, self.y)
+                elif self.face_dir == -1:
+                    self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                    if int(self.melee_frame) >= 4:
+                        self.lslash_image.draw(self.x - 40, self.y)
+            elif self.invincible == 1:
+                if self.face_dir == 1:
+                    if int(self.melee_frame) % 2 != 0:
+                        self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.melee_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
 
+                    if int(self.melee_frame) >= 4:
+                        self.rslash_image.draw(self.x + 40, self.y)
+                elif self.face_dir == -1:
+                    if int(self.melee_frame) % 2 != 0:
+                        self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                    elif int(self.melee_frame) % 2 == 0:
+                        self.invis_image.draw(self.x, self.y)
+
+                    if int(self.melee_frame) >= 4:
+                        self.lslash_image.draw(self.x - 40, self.y)
+        elif self.transform == 1:
+            if self.face_dir == 1:
+                self.rmelee_jug.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
                 if int(self.melee_frame) >= 4:
                     self.rslash_image.draw(self.x + 40, self.y)
             elif self.face_dir == -1:
-                if int(self.melee_frame) % 2 != 0:
-                    self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
-                elif int(self.melee_frame) % 2 == 0:
-                    self.invis_image.draw(self.x, self.y)
-
+                self.lmelee_jug.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
                 if int(self.melee_frame) >= 4:
                     self.lslash_image.draw(self.x - 40, self.y)
 
@@ -276,7 +303,6 @@ class Player:
         self.medcheck = 0 # 1일시 메디킷 체력 50 이하 메시지 출력
         self.transform = 0 # 0일시 통상 상태, 1일시 저거넛 모드
         self.transform_time = 0 # 모드 지속 시간, 10초 경과시 해제
-        self.autofire = False # 자동 사격 기능, True일시 자동 사격
         self.fire = False # 사격 시 불꽃 출력
         self.right_image = load_image('Sprites/Player/player_right_run.png')
         self.left_image = load_image('Sprites/Player/player_left_run.png')
@@ -286,6 +312,14 @@ class Player:
         self.lmelee_image = load_image('Sprites/Player/player_left_melee.png')
         self.lshoot_image = load_image('Sprites/Player/player_left_shoot.png')
         self.rshoot_image = load_image('Sprites/Player/player_right_shoot.png')
+        self.right_jug = load_image('Sprites/Player/Juggernaut/juggernaut_right_run.png')
+        self.left_jug = load_image('Sprites/Player/Juggernaut/juggernaut_left_run.png')
+        self.ridle_jug = load_image('Sprites/Player/Juggernaut/juggernaut_right_idle.png')
+        self.lidle_jug = load_image('Sprites/Player/Juggernaut/juggernaut_left_idle.png')
+        self.rmelee_jug = load_image('Sprites/Player/Juggernaut/juggernaut_right_melee.png')
+        self.lmelee_jug = load_image('Sprites/Player/Juggernaut/juggernaut_left_melee.png')
+        self.rshoot_jug = load_image('Sprites/Player/Juggernaut/juggernaut_right_shoot.png')
+        self.lshoot_jug = load_image('Sprites/Player/Juggernaut/juggernaut_left_shoot.png')
         self.rslash_image = load_image('Sprites/Effect/slasheffect_right.png')
         self.lslash_image = load_image('Sprites/Effect/slasheffect_left.png')
         self.invis_image = load_image('Sprites/Player/invisible.png')
@@ -302,7 +336,7 @@ class Player:
         if self.hp <= 0:
             game_world.remove_object(self)
 
-        if self.transform == 1 and self.current_time - self.transform_time > 15:
+        if self.transform == 1 and int(self.current_time - self.transform_time) > 15:
             self.transform = 0
             self.transform_time = 0
 
@@ -374,13 +408,6 @@ class Player:
             bullet = Bullet(self.x + 70 * self.face_dir, self.y, self.face_dir)
             game_world.add_object(bullet, 3)  # 게임 월드에 탄환 추가
             game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bullet')
-
-
-
-    def fullauto(self):
-        bullet = Bullet(self.x + 70 * self.face_dir, self.y, self.face_dir)
-        game_world.add_object(bullet, 3)  # 게임 월드에 탄환 추가
-        game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bullet')
 
     def get_bb(self):
         if self.attack == 0:

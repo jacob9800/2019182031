@@ -24,13 +24,12 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
             game_framework.push_state(pause_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_x):
-            player.transform = 1
-            # if juggernaut == 30:
-            #     juggernaut = 0
-            #     player.transform = 1
-            #     player.transform_time = get_time()
-            # else:
-            #     pass
+            if juggernaut == 30:
+                juggernaut = 0
+                player.transform = 1
+                player.transform_time = get_time()
+            else:
+                pass
 
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
             player.bulletmod = 0
@@ -56,7 +55,7 @@ tennis_mag = 30
 cola_mag = 7
 bowling_mag = 5
 killcount = 0
-juggernaut = 0 # 저거넛 카운트, 30킬마다 해금, 30킬 달성 시 플레이어 객체에게 1스택 추가 후 초기화.
+juggernaut = 0 # 저거넛 카운트, 30킬마다 해금, 30킬 달성 시 증가하지 않음.
 stagelev = 1 # 스테이지 레벨 전역 변수, 3단계까지 존재.
 spawnleft = True # True이면 왼쪽, False이면 오른쪽에서 스폰
 
@@ -137,11 +136,11 @@ def enemyspawn():
                 zombie = NormalZombie(50, 10, 950)
                 spawnleft = True
             game_world.add_object(zombie, 2)
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'player:zombie') # 플레이어 피격, 공격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:tennis') # 테니스 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:cola') # 콜라병 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bowling')  # 볼링공 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bullet')  # 탄환 피격
+            game_world.add_collision_pairs(None, zombie, 'player:zombie') # 플레이어 피격, 공격
+            game_world.add_collision_pairs(None, zombie, 'zombie:tennis') # 테니스 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
     elif stagelev == 2:
         for i in range(6):
             if spawnleft:
@@ -151,11 +150,11 @@ def enemyspawn():
                 zombie = NormalZombie(60, 15, 950)
                 spawnleft = True
             game_world.add_object(zombie, 2)
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'player:zombie') # 플레이어 피격, 공격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:tennis') # 테니스 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:cola') # 콜라병 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bowling')  # 볼링공 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bullet')  # 탄환 피격
+            game_world.add_collision_pairs(None, zombie, 'player:zombie') # 플레이어 피격, 공격
+            game_world.add_collision_pairs(None, zombie, 'zombie:tennis') # 테니스 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
     elif stagelev == 3:
         for i in range(7):
             if spawnleft:
@@ -165,17 +164,17 @@ def enemyspawn():
                 zombie = NormalZombie(70, 20, 950)
                 spawnleft = True
             game_world.add_object(zombie, 2)
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'player:zombie') # 플레이어 피격, 공격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:tennis') # 테니스 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:cola') # 콜라병 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bowling')  # 볼링공 피격
-            game_world.add_collision_pairs(None, game_world.objects[2][-1], 'zombie:bullet')  # 탄환 피격
+            game_world.add_collision_pairs(None, zombie, 'player:zombie') # 플레이어 피격, 공격
+            game_world.add_collision_pairs(None, zombie, 'zombie:tennis') # 테니스 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
 
 def itemspawn():
     if len(game_world.objects[4]) <= 3: # 최대 4개까지 스폰
         box = Itembox()
         game_world.add_object(box, 4)
-        game_world.add_collision_pairs(None, game_world.objects[4][-1], 'player:item')
+        game_world.add_collision_pairs(None, box, 'player:item')
 
 
 def stagelevel():
