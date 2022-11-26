@@ -27,15 +27,16 @@ class Tennis:
 
     def update(self):
         self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
-        if self.x <= 20 or self.x >= 1000:
+        if self.x <= 20 or self.x >= 2000:
             self.delete = 1
 
         if self.delete == 1:
             game_world.remove_object(self)
 
     def draw(self):
-        self.tennis_image.draw(self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
+        self.tennis_image.draw(sx, sy)
+        #draw_rectangle(*self.get_bb())
 
 
     def get_bb(self):
@@ -80,18 +81,19 @@ class Cola:
 
     def update(self):
         self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
-        if self.x <= 20 or self.x >= 1000:
+        if self.x <= 20 or self.x >= 2000:
             self.delete = 1
 
         if self.delete == 1:
             game_world.remove_object(self)
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
+        #draw_rectangle(*self.get_bb())
         if self.dir == -1:
-            self.coke_l_image.draw(self.x, self.y)
+            self.coke_l_image.draw(sx, sy)
         elif self.dir == 1:
-            self.coke_r_image.draw(self.x, self.y)
+            self.coke_r_image.draw(sx, sy)
 
     def get_bb(self):
         return self.x - 20, self.y - 10, self.x + 45, self.y + 10
@@ -132,14 +134,15 @@ class Bowling:
 
     def update(self):
         self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
-        if self.x <= 20 or self.x >= 1000:
+        if self.x <= 20 or self.x >= 2000:
             self.delete = 1
 
         if self.delete == 1:
             game_world.remove_object(self)
 
     def draw(self):
-        self.bowling_image.draw(self.x, self.y)
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
+        self.bowling_image.draw(sx, sy)
         #draw_rectangle(*self.get_bb())
 
     def get_bb(self):
@@ -186,7 +189,8 @@ class Bullet:
             game_world.remove_object(self)
 
     def draw(self):
-        self.bullet_image.draw(self.x, self.y)
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
+        self.bullet_image.draw(sx, sy)
         #draw_rectangle(*self.get_bb())
     def get_bb(self):
         return self.x - 30, self.y - 11, self.x + 30, self.y + 11

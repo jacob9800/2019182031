@@ -36,7 +36,7 @@ class Itembox:
             Itembox.medkit_image = load_image('Sprites/ItemBox/medkit.png')
 
         self.speed = 30
-        self.x = random.randint(0, 1000)
+        self.x = random.randint(0, 1800)
         self.y = 550
         self.boxmod = random.randint(0,7) # 0 ~ 4 = 박스,  5 ~ 7 : 메디킷
         self.collidable = False
@@ -55,18 +55,19 @@ class Itembox:
 
 
     def draw(self):
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
         if self.boxmod == 0:
-            self.itembox1_image.draw(self.x, self.y)
+            self.itembox1_image.draw(sx, sy)
         elif self.boxmod == 1:
-            self.itembox2_image.draw(self.x, self.y)
+            self.itembox2_image.draw(sx, sy)
         elif self.boxmod == 2:
-            self.itembox3_image.draw(self.x, self.y)
+            self.itembox3_image.draw(sx, sy)
         elif self.boxmod == 3:
-            self.itembox4_image.draw(self.x, self.y)
+            self.itembox4_image.draw(sx, sy)
         elif self.boxmod == 4:
-            self.itembox5_image.draw(self.x, self.y)
+            self.itembox5_image.draw(sx, sy)
         elif 5 <= self.boxmod <= 7:
-            self.medkit_image.draw(self.x, self.y)
+            self.medkit_image.draw(sx, sy)
         #draw_rectangle(*self.get_bb())
 
     def handle_collision(self, player,group):

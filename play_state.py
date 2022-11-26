@@ -133,7 +133,7 @@ def enemyspawn():
                 zombie = NormalZombie(50, 10)
                 spawnleft = False
             else :
-                zombie = NormalZombie(50, 10, 950)
+                zombie = NormalZombie(50, 10, 1950)
                 spawnleft = True
             game_world.add_object(zombie, 2)
             game_world.add_collision_pairs(None, zombie, 'player:zombie') # 플레이어 피격, 공격

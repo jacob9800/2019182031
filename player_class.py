@@ -58,35 +58,37 @@ class IDLE:
         self.idle_frame = (self.idle_frame + FRAMES_PER_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 10
         self.current_time = get_time()
 
-        self.x = clamp(0, self.x, 1000) # x 가동 범위 0 ~ 1000
+        self.x = clamp(0, self.x, 2000) # x 가동 범위 0 ~ 1000
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1: # 피격시 2초가량 무적 제공
             self.invincible = 0
 
     @staticmethod
     def draw(self):
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
+
         if self.transform == 0:
             if self.invincible == 0:
                 if self.face_dir == 1:
-                    self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, sx, sy)
                 elif self.face_dir == -1:
-                    self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, sx, sy)
             elif self.invincible == 1:
                 if self.face_dir == 1:
                     if int(self.idle_frame) % 2 != 0:
-                        self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.ridle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.idle_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
                 elif self.face_dir == -1:
                     if int(self.idle_frame) % 2 != 0:
-                        self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.lidle_image.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.idle_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
         elif self.transform == 1:
             if self.face_dir == 1:
-                self.ridle_jug.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.ridle_jug.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, sx, sy)
             elif self.face_dir == -1:
-                self.lidle_jug.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.lidle_jug.clip_draw(int(self.idle_frame) * 123, 0, 123, 160, sx, sy)
 
 class SHOOT:
     @staticmethod
@@ -114,34 +116,35 @@ class SHOOT:
 
     @staticmethod
     def draw(self):
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
         if self.transform == 0:
             if self.invincible == 0:
                 if self.face_dir == 1:
-                    self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, sx, sy)
                 elif self.face_dir == -1:
-                    self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, sx, sy)
             elif self.invincible == 1:
                 if self.face_dir == 1:
                     if int(self.shoot_frame) % 2 != 0:
-                        self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.rshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.shoot_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
                 elif self.face_dir == -1:
                     if int(self.shoot_frame) % 2 != 0:
-                        self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.lshoot_image.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.shoot_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
         elif self.transform == 1:
             if self.face_dir == 1:
-                self.rshoot_jug.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.rshoot_jug.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, sx, sy)
             elif self.face_dir == -1:
-                self.lshoot_jug.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.lshoot_jug.clip_draw(int(self.shoot_frame) * 123, 0, 123, 160, sx, sy)
 
         if self.fire == True:
             if self.face_dir == 1:
-                self.rfire_image.clip_draw(int(self.fire_frame) * 40, 0, 40, 40, self.x + 70, self.y)
+                self.rfire_image.clip_draw(int(self.fire_frame) * 40, 0, 40, 40, sx + 70, sy)
             elif self.face_dir == -1:
-                self.lfire_image.clip_draw(int(self.fire_frame) * 40, 0, 40, 40, self.x - 70, self.y)
+                self.lfire_image.clip_draw(int(self.fire_frame) * 40, 0, 40, 40, sx - 70, sy)
 
 class RUN:
     @staticmethod
@@ -173,7 +176,7 @@ class RUN:
         self.moving_frame = (self.moving_frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.x += self.dir * RUN_SPEED_PPS * game_framework.frame_time
         self.current_time = get_time()
-        self.x = clamp(0, self.x, 1000) # x 가동 범위 0 ~ 1000
+        self.x = clamp(0, self.x, 2000) # x 가동 범위 0 ~ 1000
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1:
             self.invincible = 0
@@ -182,28 +185,29 @@ class RUN:
 
     @staticmethod
     def draw(self):
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
         if self.transform == 0:
             if self.invincible == 0:
                 if self.dir == 1:
-                    self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, sx, sy)
                 elif self.dir == -1:
-                    self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, sx, sy)
             elif self.invincible == 1:
                 if self.dir == 1:
                     if int(self.moving_frame) % 2 != 0:
-                        self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.right_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.moving_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
                 elif self.dir == -1:
                     if int(self.moving_frame) % 2 != 0:
-                        self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.left_image.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.moving_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
         elif self.transform == 1:
             if self.dir == 1:
-                self.right_jug.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.right_jug.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, sx, sy)
             elif self.dir == -1:
-                self.left_jug.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.left_jug.clip_draw(int(self.moving_frame) * 123, 0, 123, 160, sx, sy)
 
 class MELEE:
     @staticmethod
@@ -231,42 +235,43 @@ class MELEE:
 
     @staticmethod
     def draw(self):
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
         if self.transform == 0:
             if self.invincible == 0:
                 if self.face_dir == 1:
-                    self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, sx, sy)
                     if int(self.melee_frame) >= 4:
-                        self.rslash_image.draw(self.x + 40, self.y)
+                        self.rslash_image.draw(sx + 40, sy)
                 elif self.face_dir == -1:
-                    self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                    self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, sx, sy)
                     if int(self.melee_frame) >= 4:
-                        self.lslash_image.draw(self.x - 40, self.y)
+                        self.lslash_image.draw(sx - 40, sy)
             elif self.invincible == 1:
                 if self.face_dir == 1:
                     if int(self.melee_frame) % 2 != 0:
-                        self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.rmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.melee_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
 
                     if int(self.melee_frame) >= 4:
-                        self.rslash_image.draw(self.x + 40, self.y)
+                        self.rslash_image.draw(sx + 40, sy)
                 elif self.face_dir == -1:
                     if int(self.melee_frame) % 2 != 0:
-                        self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                        self.lmelee_image.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, sx, sy)
                     elif int(self.melee_frame) % 2 == 0:
-                        self.invis_image.draw(self.x, self.y)
+                        self.invis_image.draw(sx, sy)
 
                     if int(self.melee_frame) >= 4:
-                        self.lslash_image.draw(self.x - 40, self.y)
+                        self.lslash_image.draw(sx - 40, sy)
         elif self.transform == 1:
             if self.face_dir == 1:
-                self.rmelee_jug.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.rmelee_jug.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, sx, sy)
                 if int(self.melee_frame) >= 4:
-                    self.rslash_image.draw(self.x + 40, self.y)
+                    self.rslash_image.draw(sx + 40, sy)
             elif self.face_dir == -1:
-                self.lmelee_jug.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, self.x, self.y)
+                self.lmelee_jug.clip_draw(int(self.melee_frame) * 123, 0, 123, 160, sx, sy)
                 if int(self.melee_frame) >= 4:
-                    self.lslash_image.draw(self.x - 40, self.y)
+                    self.lslash_image.draw(sx - 40, sy)
 
 
 # 상태 변환
@@ -353,22 +358,23 @@ class Player:
     def draw(self):
         self.cur_state.draw(self)
         #draw_rectangle(*self.get_bb())
+        sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
 
         if self.current_time - self.gettime <= 1:
             if self.boxtype == 5:
                 if self.medcheck == 1:
-                    self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(HP +50)', (0, 255, 0))
+                    self.font.draw(sx - 70, sy + 120, f'(HP +50)', (0, 255, 0))
                 elif self.medcheck == 0:
-                    self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(HP FULLY CHARGED!)', (0, 255, 0))
+                    self.font.draw(sx - 70, sy + 120, f'(HP FULLY CHARGED!)', (0, 255, 0))
             elif self.boxtype == 0:
-                self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(TENNISBALL RECHARGED!)', (255, 255, 255))
+                self.font.draw(sx - 70, sy + 120, f'(TENNISBALL RECHARGED!)', (255, 255, 255))
             elif self.boxtype == 1:
-                self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(COLA RECHARGED!)', (255, 255, 255))
+                self.font.draw(sx - 70, sy + 120, f'(COLA RECHARGED!)', (255, 255, 255))
             elif self.boxtype == 2:
-                self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'(BOWLING RECHARGED!)', (255, 255, 255))
+                self.font.draw(sx - 70, sy + 120, f'(BOWLING RECHARGED!)', (255, 255, 255))
 
         if self.transform == 1 and self.current_time - self.transform_time <= 15:
-            self.font.draw(play_state.player.x - 70, play_state.player.y + 120, f'[!JUGGERNAUT ACTIVATED! : {15 - int(self.current_time - self.transform_time)}]', (255, 0, 0))
+            self.font.draw(sx - 70, sy + 120, f'[!JUGGERNAUT ACTIVATED! : {15 - int(self.current_time - self.transform_time)}]', (255, 0, 0))
 
 
 

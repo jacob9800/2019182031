@@ -11,13 +11,30 @@ class Map:
         self.background = load_image('Sprites/Map/background.png')
         self.tile = load_image('Sprites/Map/tile.png')
         self.background_city = load_image('Sprites/Map/city.png')
-        self.mapsize = 1000
         self.counter = 0 # 좀비 수 제한 두기
         self.font = load_font('Fonts/154_Impact.ttf')
+        self.canvas_width = get_canvas_width()
+        self.canvas_height = get_canvas_height()
+        self.w = self.background.w
+        self.h = self.background.h
+        self.window_left = 0
+        self.window_bottom = 0
     def draw(self):
-        self.background.draw(self.mapsize/2,300)
-        self.background_city.draw(self.mapsize/2, 120)
-        self.tile.draw(self.mapsize/2, 220)
+        self.background.clip_draw_to_origin(
+            self.window_left,
+            self.window_bottom,
+            self.canvas_width,
+            self.canvas_height, 0, 0)
+        self.background_city.clip_draw_to_origin(
+            self.window_left,
+            self.window_bottom,
+            self.canvas_width,
+            500, 0, -100)
+        self.tile.clip_draw_to_origin(
+            self.window_left,
+            self.window_bottom,
+            self.canvas_width,
+            self.canvas_height, 0, -50)
 
         # UI 관련 코드들
         self.font.draw(10, 550, f'(HP: {play_state.player.hp})', (255, 255, 255))  # 플레이어 HP 출력
@@ -50,7 +67,12 @@ class Map:
 
 
     def update(self):
-        pass
+        self.window_left = clamp(0, int(play_state.player.x) - self.canvas_width // 2,
+                                 self.w - self.canvas_width - 1)
+        self.window_bottom = clamp(0, int(play_state.player.y) - self.canvas_height // 2,
+                                   self.h - self.canvas_height - 1)
+
+
 
 
 

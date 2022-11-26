@@ -74,8 +74,8 @@ class NormalZombie:
             self.zdir = -1
 
         if self.dead == 0:
-            if self.zx > play_state.gamemap.mapsize:
-                self.zx = play_state.gamemap.mapsize
+            if self.zx > 2000:
+                self.zx = 2000
                 self.zdir = -1
             elif self.zx < 0:
                 self.zx = 0
@@ -103,36 +103,37 @@ class NormalZombie:
 
 
     def draw(self):
+        sx, sy = self.zx - play_state.gamemap.window_left, self.zy - play_state.gamemap.window_bottom
         #draw_rectangle(*self.get_bb())
         if self.zdir == 1:
             if self.dead == 0:
                 if self.attack == 0:
-                    self.right_image.clip_draw(int(self.zmoving_frame) * 124, 0, 124, 150, self.zx, self.zy)
+                    self.right_image.clip_draw(int(self.zmoving_frame) * 124, 0, 124, 150, sx, sy)
                 else:
-                    self.rattack_image.clip_draw(int(self.zattack_frame) * 124, 0, 124, 150, self.zx, self.zy)
+                    self.rattack_image.clip_draw(int(self.zattack_frame) * 124, 0, 124, 150, sx, sy)
             elif self.dead == 1:
                 if int(self.zdeath_frame) != 9 and self.counter == 0:
-                    self.rdead_image.clip_draw(int(self.zdeath_frame) * 179, 0, 179, 150, self.zx, self.zy-20)
+                    self.rdead_image.clip_draw(int(self.zdeath_frame) * 179, 0, 179, 150, sx, sy-20)
                 else :
                     self.counter = 1
-                    self.rdead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
+                    self.rdead_image.clip_draw(9 * 179, 0, 179, 150, sx, sy-20)
 
         elif self.zdir == -1:
             if self.dead == 0:
                 if self.attack == 0:
-                    self.left_image.clip_draw(int(self.zmoving_frame) * 124, 0, 124, 150, self.zx, self.zy)
+                    self.left_image.clip_draw(int(self.zmoving_frame) * 124, 0, 124, 150, sx, sy)
                 else:
-                    self.lattack_image.clip_draw(int(self.zattack_frame) * 124, 0, 124, 150, self.zx, self.zy)
+                    self.lattack_image.clip_draw(int(self.zattack_frame) * 124, 0, 124, 150, sx, sy)
             elif self.dead == 1:
                 if int(self.zdeath_frame) != 9 and self.counter == 0:
-                    self.ldead_image.clip_draw(int(self.zdeath_frame) * 179, 0, 179, 150, self.zx, self.zy-20)
+                    self.ldead_image.clip_draw(int(self.zdeath_frame) * 179, 0, 179, 150, sx, sy-20)
                 else:
                     self.counter = 1
-                    self.ldead_image.clip_draw(9 * 179, 0, 179, 150, self.zx, self.zy-20)
+                    self.ldead_image.clip_draw(9 * 179, 0, 179, 150, sx, sy-20)
 
         if self.hit == 1 and self.dead == 0:
             if self.current_time - self.hit_time <= 0.3:
-                self.blood_image.clip_draw(int(self.blood_frame) * 137, 0, 137, 68, self.zx, self.zy)  # 피격시 출혈 효과 발생
+                self.blood_image.clip_draw(int(self.blood_frame) * 137, 0, 137, 68, sx, sy) # 피격시 출혈 효과 발생
             else:
                 self.hit = 0
 
