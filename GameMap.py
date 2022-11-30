@@ -19,7 +19,9 @@ class Map:
         self.h = self.background.h
         self.window_left = 0
         self.window_bottom = 0
+
     def draw(self):
+        sx, sy = play_state.player.x - play_state.gamemap.window_left, play_state.player.y - play_state.gamemap.window_bottom
         self.background.clip_draw_to_origin(
             self.window_left,
             self.window_bottom,
@@ -49,21 +51,23 @@ class Map:
                     self.font.draw(10, 525, f'(TENNISBALL | {play_state.tennis_mag}/30)', (255, 255, 255))  # 테니스볼 개수 출력
                 elif play_state.tennis_mag <= 5:
                     self.font.draw(10, 525, f'(TENNISBALL | {play_state.tennis_mag}/30)', (255, 0, 0))  # 테니스볼 개수 출력
-                    self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+                    self.font.draw(sx - 100, sy + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
             elif play_state.player.bulletmod == 1:
                 if play_state.cola_mag > 2:
                     self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 255, 255))  # 콜라병 개수 출력
                 elif play_state.cola_mag <= 2:
                     self.font.draw(10, 525, f'(JOKA-COLA | {play_state.cola_mag}/7)', (255, 0, 0))  # 콜라병 개수 출력
-                    self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+                    self.font.draw(sx - 100, sy + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
             elif play_state.player.bulletmod == 2:
                 if play_state.bowling_mag > 2:
                     self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 255, 255))  # 볼링공 개수 출력
                 elif play_state.bowling_mag <= 2:
                     self.font.draw(10, 525, f'(BOWLINGBALL | {play_state.bowling_mag}/5)', (255, 0, 0))  # 볼링공 개수 출력
-                    self.font.draw(play_state.player.x - 100, play_state.player.y + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
+                    self.font.draw(sx - 100, sy + 100, 'WARNING! LOW AMMUNITION!', (255, 0, 0)) # 탄 부족 메시지
         elif play_state.player.transform == 1:
             self.font.draw(10, 525, f'(6.8mm XM1186 | INFINITE)', (255, 255, 0))  # 볼링공 개수 출력
+
+
 
 
     def update(self):

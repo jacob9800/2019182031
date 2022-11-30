@@ -6,6 +6,7 @@ import random
 from GameMap import Map
 import time
 from zombieclass import NormalZombie
+from zombieclass import FastZombie
 from bulletclass import Tennis, Cola
 from player_class import Player
 from items_class import Itembox
@@ -66,7 +67,7 @@ def enter():
     player = Player()
 
     game_world.add_object(gamemap, 0)
-    game_world.add_object(player, 1)
+    game_world.add_object(player, 4)
 
     game_world.add_collision_pairs(player, None, 'player:zombie')
     game_world.add_collision_pairs(player, None, 'player:item')
@@ -141,18 +142,44 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+        for i in range(1):
+            if spawnleft:
+                zombie = FastZombie(25, 6)
+                spawnleft = False
+            else:
+                zombie = FastZombie(25, 6, 1950)
+                spawnleft = True
+            game_world.add_object(zombie, 2)
+            game_world.add_collision_pairs(None, zombie, 'player:zombie')  # 플레이어 피격, 공격
+            game_world.add_collision_pairs(None, zombie, 'zombie:tennis')  # 테니스 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:cola')  # 콜라병 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
     elif stagelev == 2:
         for i in range(6):
             if spawnleft:
-                zombie = NormalZombie(60, 15)
+                zombie = NormalZombie(50, 15)
                 spawnleft = False
             else:
-                zombie = NormalZombie(60, 15, 950)
+                zombie = NormalZombie(50, 15, 1950)
                 spawnleft = True
             game_world.add_object(zombie, 2)
             game_world.add_collision_pairs(None, zombie, 'player:zombie') # 플레이어 피격, 공격
             game_world.add_collision_pairs(None, zombie, 'zombie:tennis') # 테니스 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+        for i in range(2):
+            if spawnleft:
+                zombie = FastZombie(30, 8)
+                spawnleft = False
+            else:
+                zombie = FastZombie(30, 8, 1950)
+                spawnleft = True
+            game_world.add_object(zombie, 2)
+            game_world.add_collision_pairs(None, zombie, 'player:zombie')  # 플레이어 피격, 공격
+            game_world.add_collision_pairs(None, zombie, 'zombie:tennis')  # 테니스 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:cola')  # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
     elif stagelev == 3:
@@ -161,7 +188,7 @@ def enemyspawn():
                 zombie = NormalZombie(70, 20)
                 spawnleft = False
             else:
-                zombie = NormalZombie(70, 20, 950)
+                zombie = NormalZombie(70, 20, 1950)
                 spawnleft = True
             game_world.add_object(zombie, 2)
             game_world.add_collision_pairs(None, zombie, 'player:zombie') # 플레이어 피격, 공격
@@ -169,11 +196,24 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+        for i in range(3):
+            if spawnleft:
+                zombie = FastZombie(35, 10)
+                spawnleft = False
+            else:
+                zombie = FastZombie(35, 10, 1950)
+                spawnleft = True
+            game_world.add_object(zombie, 2)
+            game_world.add_collision_pairs(None, zombie, 'player:zombie')  # 플레이어 피격, 공격
+            game_world.add_collision_pairs(None, zombie, 'zombie:tennis')  # 테니스 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:cola')  # 콜라병 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
+            game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
 
 def itemspawn():
     if len(game_world.objects[4]) <= 3: # 최대 4개까지 스폰
         box = Itembox()
-        game_world.add_object(box, 4)
+        game_world.add_object(box, 3)
         game_world.add_collision_pairs(None, box, 'player:item')
 
 

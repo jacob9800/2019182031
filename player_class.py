@@ -308,6 +308,7 @@ class Player:
         self.medcheck = 0 # 1일시 메디킷 체력 50 이하 메시지 출력
         self.transform = 0 # 0일시 통상 상태, 1일시 저거넛 모드
         self.transform_time = 0 # 모드 지속 시간, 10초 경과시 해제
+        self.lowhealth = 1 # 체력 절반 이하일시 1, 아닐땐 0
         self.fire = False # 사격 시 불꽃 출력
         self.right_image = load_image('Sprites/Player/player_right_run.png')
         self.left_image = load_image('Sprites/Player/player_left_run.png')
@@ -330,6 +331,7 @@ class Player:
         self.invis_image = load_image('Sprites/Player/invisible.png')
         self.rfire_image = load_image('Sprites/Effect/fire_right.png')
         self.lfire_image = load_image('Sprites/Effect/fire_left.png')
+        self.lowhp_image = load_image('Sprites/Effect/LowHP.png')
         self.font = load_font('Fonts/154_Impact.ttf')
         self.event_que = []
         self.cur_state = IDLE
@@ -340,6 +342,11 @@ class Player:
 
         if self.hp <= 0:
             game_world.remove_object(self)
+
+        if self.hp <= 50:
+            self.lowhealth = 1
+        else:
+            self.lowhealth = 0
 
         if self.transform == 1 and int(self.current_time - self.transform_time) > 15:
             self.transform = 0
@@ -376,6 +383,8 @@ class Player:
         if self.transform == 1 and self.current_time - self.transform_time <= 15:
             self.font.draw(sx - 70, sy + 120, f'[!JUGGERNAUT ACTIVATED! : {15 - int(self.current_time - self.transform_time)}]', (255, 0, 0))
 
+        if self.lowhealth == 1:
+            self.lowhp_image.draw(500, 300)
 
 
     def add_event(self, event):
