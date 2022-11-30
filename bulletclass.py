@@ -182,7 +182,7 @@ class Bullet:
 
     def update(self):
         self.x += self.dir * RUN_SPEED_KMPH * game_framework.frame_time * self.speed
-        if self.x <= 20 or self.x >= 1000:
+        if self.x <= 20 or self.x >= 2000:
             self.delete = 1
 
         if self.delete == 1:
