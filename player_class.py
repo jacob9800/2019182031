@@ -291,6 +291,7 @@ class Player:
     hurt_sound = None
     lowhp_sound = None
     melee_sound = None
+    bullet_sound = None
     def __init__(self):
         self.x, self.y = 500, 90  # 플레이어 좌표
         self.atkchance = False
@@ -308,7 +309,7 @@ class Player:
         self.idle = 0  # 0: 정지 상태, 1: 이동 상태
         self.attack = 0  # 0: 대기 상태, 1: 근공 실행
         self.shoot = 0  # 0: 무기 없음, 1: 발사
-        self.hp = 30  # 플레이어 HP, 0이 될 경우 패배창 출력
+        self.hp = 100  # 플레이어 HP, 0이 될 경우 패배창 출력
         self.invincible = 0  # 0일시 피격 가능, 1일시 무적 상태
         self.gettime = 0 # 아이템 습득 시간
         self.boxtype = 0 # 습득 박스 종류
@@ -355,7 +356,11 @@ class Player:
 
         if Player.melee_sound == None:
             Player.melee_sound = load_wav('Sounds/Player/Player_Melee.mp3')
-            Player.melee_sound.set_volume(30)
+            Player.melee_sound.set_volume(40)
+
+        if Player.bullet_sound == None:
+            Player.bullet_sound = load_wav('Sounds/Player/Player_Bullet.mp3')
+            Player.bullet_sound.set_volume(30)
 
         self.event_que = []
         self.cur_state = IDLE
@@ -450,6 +455,7 @@ class Player:
             bullet = Bullet(self.x + 70 * self.face_dir, self.y, self.face_dir)
             game_world.add_object(bullet, 3)  # 게임 월드에 탄환 추가
             game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bullet')
+            self.bullet_sound.play()
 
     def get_bb(self):
         if self.attack == 0:
@@ -459,5 +465,8 @@ class Player:
 
     def handle_collision(self, other, group):
         if group == 'player:zombie':
-            self.hurt_sound.play()
+            if self.attack == 0 and self.invincible == 0:
+                self.hurt_sound.play()
+            elif self.attack == 1:
+                other.hurt_sound.play()
 

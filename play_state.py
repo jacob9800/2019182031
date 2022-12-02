@@ -31,6 +31,8 @@ def handle_events():
                 player.transform_time = get_time()
             else:
                 pass
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_l):
+            player.hp = 0
 
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
             player.bulletmod = 0
@@ -62,7 +64,16 @@ spawnleft = True # True이면 왼쪽, False이면 오른쪽에서 스폰
 
 
 def enter():
-    global player, gamemap, n_zombie, running
+    global player, gamemap, n_zombie, running, tennis_mag, cola_mag, bowling_mag, killcount, juggernaut, stagelev, spawnleft
+
+    tennis_mag = 30
+    cola_mag = 7
+    bowling_mag = 5
+    killcount = 0
+    juggernaut = 0  # 저거넛 카운트, 30킬마다 해금, 30킬 달성 시 증가하지 않음.
+    stagelev = 1  # 스테이지 레벨 전역 변수, 3단계까지 존재.
+    spawnleft = True  # True이면 왼쪽, False이면 오른쪽에서 스폰
+
     gamemap = Map()
     player = Player()
 
@@ -73,8 +84,11 @@ def enter():
     game_world.add_collision_pairs(player, None, 'player:item')
     running = True
 
+    gamemap.Main_BGM.repeat_play()
+
 # 게임 종료 함수
 def exit():
+    gamemap.Main_BGM.stop()
     game_world.clear()
 
 def update():
@@ -142,6 +156,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+        #zombie.spawn_sound.play()
         for i in range(1):
             if spawnleft:
                 zombie = FastZombie(25, 6)
@@ -169,6 +184,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+        #zombie.spawn_sound.play()
         for i in range(2):
             if spawnleft:
                 zombie = FastZombie(30, 8)
@@ -182,6 +198,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:cola')  # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+
     elif stagelev == 3:
         for i in range(7):
             if spawnleft:
@@ -196,6 +213,7 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:cola') # 콜라병 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bowling')  # 볼링공 피격
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
+        #zombie.spawn_sound.play()
         for i in range(3):
             if spawnleft:
                 zombie = FastZombie(35, 10)

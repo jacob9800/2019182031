@@ -22,9 +22,8 @@ class Map:
         self.window_bottom = 0
 
         if Map.Main_BGM == None:
-            Map.Main_BGM = load_wav('Sounds/BGM/Main_BGM.mp3')
+            Map.Main_BGM = load_music('Sounds/BGM/Main_BGM.mp3')
             Map.Main_BGM.set_volume(25)
-            Map.Main_BGM.repeat_play()
 
     def draw(self):
         sx, sy = play_state.player.x - play_state.gamemap.window_left, play_state.player.y - play_state.gamemap.window_bottom
@@ -47,6 +46,11 @@ class Map:
         # UI 관련 코드들
         self.font.draw(10, 550, f'(HP: {play_state.player.hp})', (255, 255, 255))  # 플레이어 HP 출력
         self.font.draw(10, 500,  f'(KILLCOUNT: {play_state.killcount})', (255, 255, 255)) # 킬 점수 출력
+
+        self.font.draw(835, 550, '[', (255, 255, 255))  # 킬 점수 출력
+        self.font.draw(990, 550, ']', (255, 255, 255))  # 킬 점수 출력
+        for i in range(play_state.juggernaut):
+            self.font.draw(840 + (i*5), 550, 'I', (0, 255, 0))  # 저거넛 스택
 
         if play_state.juggernaut == 30:
             self.font.draw(10, 475, f'[!JUGGERNAUT READY!]', (255, 255, 0))  # 킬 점수 출력
@@ -81,6 +85,7 @@ class Map:
                                  self.w - self.canvas_width - 1)
         self.window_bottom = clamp(0, int(play_state.player.y) - self.canvas_height // 2,
                                    self.h - self.canvas_height - 1)
+
 
 
 

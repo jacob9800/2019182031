@@ -48,6 +48,7 @@ class Tennis:
                 other.hp -= 20
                 other.hit = 1
                 other.hit_time = get_time()
+                other.hurt_sound.play()
                 self.delete = 1
                 print("좀비 체력 : ", other.hp)
                 if other.zdir == 1:
@@ -106,6 +107,7 @@ class Cola:
                     other.hp -= 1
                     other.hit = 1
                     other.hit_time = get_time()
+                    other.hurt_sound.play()
                 if other.speed > 1:
                     other.speed /= 2
                 print("좀비 체력 : ", other.hp)
@@ -155,6 +157,7 @@ class Bowling:
                     other.hp -= 65
                     other.hit = 1
                     other.hit_time = get_time()
+                    other.hurt_sound.play()
                     self.count += 1
                 print("좀비 체력 : ", other.hp)
                 if other.zdir == 1:
@@ -202,6 +205,7 @@ class Bullet:
                     other.hp -= 40
                     other.hit = 1
                     other.hit_time = get_time()
+                    other.hurt_sound.play()
                     self.count += 1
                 print("좀비 체력 : ", other.hp)
                 if other.zdir == 1:

@@ -26,6 +26,10 @@ class NormalZombie:
     rdead_image = None
     ldead_image = None
     blood_image = None
+
+    spawn_sound = None
+    death_sound = None
+    hurt_sound = None
     def __init__(self, HP = 50, ATK = 10, SPAWN = 0):
         self.zx, self.zy = SPAWN, 100.0  # 좀비 좌표
         self.atkchance = False
@@ -60,6 +64,16 @@ class NormalZombie:
         if NormalZombie.blood_image == None:
             NormalZombie.blood_image = load_image('Sprites/Effect/Bloodeffect.png')
 
+        if NormalZombie.death_sound == None:
+            NormalZombie.death_sound = load_wav('Sounds/Zombie/Zombie_Death.mp3')
+            NormalZombie.death_sound.set_volume(25)
+        if NormalZombie.hurt_sound == None:
+            NormalZombie.hurt_sound = load_wav('Sounds/Zombie/Zombie_Hurt.mp3')
+            NormalZombie.hurt_sound.set_volume(35)
+        if NormalZombie.spawn_sound == None:
+            NormalZombie.spawn_sound = load_wav('Sounds/Zombie/Zombie_IDLE.mp3')
+            NormalZombie.spawn_sound.set_volume(25)
+
     def update(self):
         #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.zmoving_frame = (self.zmoving_frame + ZFRAMES_PER_MOVING * ZACTION_PER_TIME * game_framework.frame_time) % 10
@@ -85,7 +99,7 @@ class NormalZombie:
                 self.idle = 0
                 self.dead_time = get_time()
                 play_state.killcount += 1
-                if play_state.juggernaut < 30:
+                if play_state.player.transform == 0 and play_state.juggernaut < 30:
                     play_state.juggernaut += 1
             else:
                 if self.idle == 1:
@@ -156,13 +170,11 @@ class NormalZombie:
                         other.hp -= self.dmg  # 플레이어에게 데미지
                         other.hit_time = get_time()  # 피격 시간 기록
                         other.invincible = 1
-
-                    #print(other.hp)
                 else:
                     pass
 
                 if other.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
-                    #print('hit!')
+                    self.hurt_sound.play()
                     if other.atkchance == True:
                         if self.zdir == -1 and self.dead == 0 and other.face_dir == 1:
                             self.hit_time = get_time()  # 피격 시간 기록
@@ -186,6 +198,10 @@ class FastZombie:
     rdead_image = None
     ldead_image = None
     blood_image = None
+
+    spawn_sound = None
+    death_sound = None
+    hurt_sound = None
     def __init__(self, HP = 50, ATK = 10, SPAWN = 0):
         self.zx, self.zy = SPAWN, 100.0  # 좀비 좌표
         self.atkchance = False
@@ -220,6 +236,16 @@ class FastZombie:
         if FastZombie.blood_image == None:
             FastZombie.blood_image = load_image('Sprites/Effect/Bloodeffect.png')
 
+        if FastZombie.death_sound == None:
+            FastZombie.death_sound = load_wav('Sounds/Zombie/Zombie_Death.mp3')
+            FastZombie.death_sound.set_volume(25)
+        if FastZombie.hurt_sound == None:
+            FastZombie.hurt_sound = load_wav('Sounds/Zombie/Zombie_Hurt.mp3')
+            FastZombie.hurt_sound.set_volume(35)
+        if FastZombie.spawn_sound == None:
+            FastZombie.spawn_sound = load_wav('Sounds/Zombie/Zombie_IDLE.mp3')
+            FastZombie.spawn_sound.set_volume(25)
+
     def update(self):
         #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.zmoving_frame = (self.zmoving_frame + ZFRAMES_PER_MOVING * ZACTION_PER_TIME * game_framework.frame_time) % 10
@@ -245,7 +271,7 @@ class FastZombie:
                 self.idle = 0
                 self.dead_time = get_time()
                 play_state.killcount += 1
-                if play_state.juggernaut < 30:
+                if play_state.player.transform == 0 and play_state.juggernaut < 30:
                     play_state.juggernaut += 1
             else:
                 if self.idle == 1:
@@ -316,13 +342,8 @@ class FastZombie:
                         other.hp -= self.dmg  # 플레이어에게 데미지
                         other.hit_time = get_time()  # 피격 시간 기록
                         other.invincible = 1
-
-                    #print(other.hp)
-                else:
-                    pass
-
-                if other.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
-                    #print('hit!')
+                elif other.attack == 1:  # MELEE 상태의 플레이어에게 접촉 시
+                    self.hurt_sound.play()
                     if other.atkchance == True:
                         if self.zdir == -1 and self.dead == 0 and other.face_dir == 1:
                             self.hit_time = get_time()  # 피격 시간 기록
