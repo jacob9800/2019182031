@@ -211,10 +211,12 @@ def enemyspawn():
             game_world.add_collision_pairs(None, zombie, 'zombie:bullet')  # 탄환 피격
 
 def itemspawn():
-    if len(game_world.objects[4]) <= 3: # 최대 4개까지 스폰
+    if len(game_world.objects[3]) <= 3: # 최대 4개까지 스폰
         box = Itembox()
+        box.itembox_spawn.play()
         game_world.add_object(box, 3)
         game_world.add_collision_pairs(None, box, 'player:item')
+
 
 
 def stagelevel():

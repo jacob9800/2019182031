@@ -7,6 +7,7 @@ from items_class import Itembox
 
 zombie = None
 class Map:
+    Main_BGM = None
     def __init__(self):
         self.background = load_image('Sprites/Map/background.png')
         self.tile = load_image('Sprites/Map/tile.png')
@@ -19,6 +20,11 @@ class Map:
         self.h = self.background.h
         self.window_left = 0
         self.window_bottom = 0
+
+        if Map.Main_BGM == None:
+            Map.Main_BGM = load_wav('Sounds/BGM/Main_BGM.mp3')
+            Map.Main_BGM.set_volume(25)
+            Map.Main_BGM.repeat_play()
 
     def draw(self):
         sx, sy = play_state.player.x - play_state.gamemap.window_left, play_state.player.y - play_state.gamemap.window_bottom

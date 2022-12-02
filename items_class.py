@@ -18,6 +18,8 @@ class Itembox:
     itembox4_image = None
     itembox5_image = None
     medkit_image = None
+    itembox_collision = None
+    itembox_spawn = None
 
     def __init__(self):
 
@@ -35,6 +37,14 @@ class Itembox:
         if Itembox.medkit_image == None:
             Itembox.medkit_image = load_image('Sprites/ItemBox/medkit.png')
 
+        if Itembox.itembox_collision == None:
+            Itembox.itembox_collision = load_wav('Sounds/Item/Item_Collision.mp3')
+            Itembox.itembox_collision.set_volume(30)
+
+        if Itembox.itembox_spawn == None:
+            Itembox.itembox_spawn = load_wav('Sounds/Item/Item_Spawn.mp3')
+            Itembox.itembox_spawn.set_volume(20)
+
         self.speed = 30
         self.x = random.randint(0, 1800)
         self.y = 550
@@ -51,6 +61,7 @@ class Itembox:
             self.collidable = True
 
         if self.delete == 1:
+            self.itembox_collision.play()
             game_world.remove_object(self)
 
 
@@ -72,6 +83,7 @@ class Itembox:
 
     def handle_collision(self, player,group):
         if group == 'player:item':
+
             if self.collidable == True:
                 if 5 <= self.boxmod <= 7 and player.hp < 100:
                     #print(self.boxmod, '메디킷 획득')

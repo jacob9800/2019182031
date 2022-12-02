@@ -63,6 +63,7 @@ class IDLE:
         if self.current_time - self.hit_time >= 2 and self.invincible == 1: # 피격시 2초가량 무적 제공
             self.invincible = 0
 
+
     @staticmethod
     def draw(self):
         sx, sy = self.x - play_state.gamemap.window_left, self.y - play_state.gamemap.window_bottom
@@ -110,6 +111,7 @@ class SHOOT:
 
         if self.current_time - self.hit_time >= 2 and self.invincible == 1: # 피격시 2초가량 무적 제공
             self.invincible = 0
+
 
         if int(self.fire_frame) >= 3:
             self.fire = False
@@ -216,6 +218,7 @@ class MELEE:
         self.attack = 1
         self.dir = 0
 
+
     @staticmethod
     def exit(self, event):
         #print("EXIT MELEE")
@@ -226,7 +229,7 @@ class MELEE:
     def do(self):
         #print(self.attack)
         self.melee_frame = (self.melee_frame + FRAMES_PER_MELEE * ACTION_PER_TIME * game_framework.frame_time) % 10
-
+        self.melee_sound.play()
         if int(self.melee_frame) == 0:
             self.atkchance = True
 
@@ -284,6 +287,10 @@ next_state = {
 }
 
 class Player:
+    fire_sound = None
+    hurt_sound = None
+    lowhp_sound = None
+    melee_sound = None
     def __init__(self):
         self.x, self.y = 500, 90  # 플레이어 좌표
         self.atkchance = False
@@ -333,6 +340,23 @@ class Player:
         self.lfire_image = load_image('Sprites/Effect/fire_left.png')
         self.lowhp_image = load_image('Sprites/Effect/LowHP.png')
         self.font = load_font('Fonts/154_Impact.ttf')
+
+        if Player.fire_sound == None:
+            Player.fire_sound = load_wav('Sounds/Player/Player_Fire.mp3')
+            Player.fire_sound.set_volume(25)
+
+        if Player.hurt_sound == None:
+            Player.hurt_sound = load_wav('Sounds/Player/Player_Hurt.mp3')
+            Player.hurt_sound.set_volume(30)
+
+        if Player.lowhp_sound == None:
+            Player.lowhp_sound = load_wav('Sounds/Player/Player_LowHP.mp3')
+            Player.lowhp_sound.set_volume(10)
+
+        if Player.melee_sound == None:
+            Player.melee_sound = load_wav('Sounds/Player/Player_Melee.mp3')
+            Player.melee_sound.set_volume(30)
+
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
@@ -402,6 +426,7 @@ class Player:
                     ball = Tennis(self.x + 50 * self.face_dir, self.y, self.face_dir)
                     game_world.add_object(ball, 3) # 게임 월드에 탄환 추가
                     game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:tennis')
+                    self.fire_sound.play()
                     play_state.tennis_mag -= 1  # 보유 탄환 1 감소
                 else:
                     print("총알 없음!")
@@ -410,12 +435,14 @@ class Player:
                     bottle = Cola(self.x + 70 * self.face_dir, self.y, self.face_dir)
                     game_world.add_object(bottle, 3) # 게임 월드에 탄환 추가
                     game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:cola')
+                    self.fire_sound.play()
                     play_state.cola_mag -= 1
             elif self.bulletmod == 2:
                 if play_state.bowling_mag > 0:
                     bowlingball = Bowling(self.x + 70 * self.face_dir, self.y, self.face_dir)
                     game_world.add_object(bowlingball, 3)  # 게임 월드에 탄환 추가
                     game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bowling')
+                    self.fire_sound.play()
                     play_state.bowling_mag -= 1
                 else:
                     print("총알 없음!")
@@ -431,5 +458,6 @@ class Player:
             return self.x - 70, self.y - 80, self.x + 70, self.y + 80
 
     def handle_collision(self, other, group):
-        pass
+        if group == 'player:zombie':
+            self.hurt_sound.play()
 
