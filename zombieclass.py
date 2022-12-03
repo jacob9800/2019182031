@@ -222,17 +222,17 @@ class FastZombie:
         self.hp = HP  # 좀비 HP, 0이 될 경우 사망 애니메이션 출력
         self.dmg = ATK # 좀비 공격력, 스테이지별로 증가
         if FastZombie.right_image == None:
-            FastZombie.right_image = load_image('Sprites/Zombie_male/zombie_right_walk.png')
+            FastZombie.right_image = load_image('Sprites/Zombie_female/fzombie_right_walk.png')
         if FastZombie.left_image == None:
-            FastZombie.left_image = load_image('Sprites/Zombie_male/zombie_left_walk.png')
+            FastZombie.left_image = load_image('Sprites/Zombie_female/fzombie_left_walk.png')
         if FastZombie.rattack_image == None:
-            FastZombie.rattack_image = load_image('Sprites/Zombie_male/zombie_right_attack.png')
+            FastZombie.rattack_image = load_image('Sprites/Zombie_female/fzombie_right_attack.png')
         if FastZombie.lattack_image == None:
-            FastZombie.lattack_image = load_image('Sprites/Zombie_male/zombie_left_attack.png')
+            FastZombie.lattack_image = load_image('Sprites/Zombie_female/fzombie_left_attack.png')
         if FastZombie.rdead_image == None:
-            FastZombie.rdead_image = load_image('Sprites/Zombie_male/zombie_right_dead.png')
+            FastZombie.rdead_image = load_image('Sprites/Zombie_female/fzombie_right_dead.png')
         if FastZombie.ldead_image == None:
-            FastZombie.ldead_image = load_image('Sprites/Zombie_male/zombie_left_dead.png')
+            FastZombie.ldead_image = load_image('Sprites/Zombie_female/fzombie_left_dead.png')
         if FastZombie.blood_image == None:
             FastZombie.blood_image = load_image('Sprites/Effect/Bloodeffect.png')
 

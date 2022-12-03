@@ -12,11 +12,16 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 class Tennis:
     tennis_image = None
+    tennis_hit = None
 
     def __init__(self, x = 0, y = 0, dir = 1):
 
         if Tennis.tennis_image == None:
             Tennis.tennis_image = load_image('Sprites/Bullet/tennisball.png')
+
+        if Tennis.tennis_hit == None:
+            Tennis.tennis_hit = load_wav('Sounds/Bullet/Tennis_hit.wav')
+            Tennis.tennis_hit.set_volume(35)
 
         self.speed = 50
         self.x = x
@@ -48,6 +53,7 @@ class Tennis:
                 other.hp -= 20
                 other.hit = 1
                 other.hit_time = get_time()
+                self.tennis_hit.play()
                 other.hurt_sound.play()
                 self.delete = 1
                 print("좀비 체력 : ", other.hp)
@@ -66,12 +72,17 @@ class Tennis:
 class Cola:
     coke_l_image = None
     coke_r_image = None
+    coke_hit = None
 
     def __init__(self, x = 500, y = 20, dir = 1):
         if Cola.coke_l_image == None:
             Cola.coke_l_image = load_image('Sprites/Bullet/cola_left.png')
         if Cola.coke_r_image == None:
             Cola.coke_r_image = load_image('Sprites/Bullet/cola_right.png')
+
+        if Cola.coke_hit == None:
+            Cola.coke_hit = load_wav('Sounds/Bullet/Cola_hit.mp3')
+            Cola.coke_hit.set_volume(35)
 
         self.speed = 30
         self.count = 0
@@ -107,6 +118,7 @@ class Cola:
                     other.hp -= 1
                     other.hit = 1
                     other.hit_time = get_time()
+                    self.coke_hit.play()
                     other.hurt_sound.play()
                 if other.speed > 1:
                     other.speed /= 2
@@ -121,11 +133,16 @@ class Cola:
 
 class Bowling:
     bowling_image = None
+    bowling_hit = None
 
     def __init__(self, x = 0, y = 0, dir = 1):
 
         if Bowling.bowling_image == None:
             Bowling.bowling_image = load_image('Sprites/Bullet/bowling_ball.png')
+
+        if Bowling.bowling_hit == None:
+            Bowling.bowling_hit = load_wav('Sounds/Bullet/Bowling_hit.mp3')
+            Bowling.bowling_hit.set_volume(35)
 
         self.speed = 80
         self.x = x
@@ -157,6 +174,7 @@ class Bowling:
                     other.hp -= 65
                     other.hit = 1
                     other.hit_time = get_time()
+                    self.bowling_hit.play()
                     other.hurt_sound.play()
                     self.count += 1
                 print("좀비 체력 : ", other.hp)
@@ -170,11 +188,16 @@ class Bowling:
 
 class Bullet:
     bullet_image = None
+    bullet_hit = None
 
     def __init__(self, x = 0, y = 0, dir = 1):
 
         if Bullet.bullet_image == None:
             Bullet.bullet_image = load_image('Sprites/Bullet/bullet.png')
+
+        if Bullet.bullet_hit == None:
+            Bullet.bullet_hit = load_wav('Sounds/Bullet/Bullet_hit.mp3')
+            Bullet.bullet_hit.set_volume(40)
 
         self.speed = 100
         self.x = x
@@ -205,6 +228,7 @@ class Bullet:
                     other.hp -= 40
                     other.hit = 1
                     other.hit_time = get_time()
+                    self.bullet_hit.play()
                     other.hurt_sound.play()
                     self.count += 1
                 print("좀비 체력 : ", other.hp)

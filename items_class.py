@@ -81,11 +81,10 @@ class Itembox:
             self.medkit_image.draw(sx, sy)
         #draw_rectangle(*self.get_bb())
 
-    def handle_collision(self, player,group):
+    def handle_collision(self, player, group):
         if group == 'player:item':
-
             if self.collidable == True:
-                if 5 <= self.boxmod <= 7 and player.hp < 100:
+                if 5 <= self.boxmod <= 7 and player.hp < 100 and player.transform == 0:
                     #print(self.boxmod, '메디킷 획득')
                     if player.hp <= 50:
                         player.medcheck = 1

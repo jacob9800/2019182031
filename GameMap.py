@@ -47,8 +47,9 @@ class Map:
         self.font.draw(10, 550, f'(HP: {play_state.player.hp})', (255, 255, 255))  # 플레이어 HP 출력
         self.font.draw(10, 500,  f'(KILLCOUNT: {play_state.killcount})', (255, 255, 255)) # 킬 점수 출력
 
-        self.font.draw(835, 550, '[', (255, 255, 255))  # 킬 점수 출력
-        self.font.draw(990, 550, ']', (255, 255, 255))  # 킬 점수 출력
+        self.font.draw(835, 575, '[JUGGERNAUT MOD]', (255, 255, 255))
+        self.font.draw(835, 550, '[', (255, 255, 255))
+        self.font.draw(990, 550, ']', (255, 255, 255))
         for i in range(play_state.juggernaut):
             self.font.draw(840 + (i*5), 550, 'I', (0, 255, 0))  # 저거넛 스택
 
