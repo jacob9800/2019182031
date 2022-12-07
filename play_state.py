@@ -61,11 +61,14 @@ killcount = 0
 juggernaut = 0 # 저거넛 카운트, 30킬마다 해금, 30킬 달성 시 증가하지 않음.
 stagelev = 1 # 스테이지 레벨 전역 변수, 3단계까지 존재.
 spawnleft = True # True이면 왼쪽, False이면 오른쪽에서 스폰
-
+start = 0
+end = 0
 
 def enter():
-    global player, gamemap, n_zombie, running, tennis_mag, cola_mag, bowling_mag, killcount, juggernaut, stagelev, spawnleft
 
+    global player, gamemap, n_zombie, running, tennis_mag, cola_mag, bowling_mag, killcount, juggernaut, stagelev, spawnleft, start
+
+    start = time.time()
     tennis_mag = 30
     cola_mag = 7
     bowling_mag = 5
@@ -88,7 +91,10 @@ def enter():
 
 # 게임 종료 함수
 def exit():
+    global end
+    end = time.time()
     gamemap.Main_BGM.stop()
+
     game_world.clear()
 
 def update():
@@ -231,7 +237,7 @@ def enemyspawn():
 def itemspawn():
     if len(game_world.objects[3]) <= 3: # 최대 4개까지 스폰
         box = Itembox()
-        box.itembox_spawn.play()
+        box.itembox_spawn.play(1)
         game_world.add_object(box, 3)
         game_world.add_collision_pairs(None, box, 'player:item')
 

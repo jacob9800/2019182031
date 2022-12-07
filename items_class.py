@@ -96,7 +96,7 @@ class Itembox:
                     player.boxtype = 5
                     self.delete = 1
 
-                elif 0 <= self.boxmod <= 4:
+                elif 0 <= self.boxmod <= 4 and player.transform == 0:
                     if self.boxmod == 0 or 3 <= self.boxmod <= 4:
                         player.gettime = get_time()
                         player.boxtype = 0

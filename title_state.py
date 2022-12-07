@@ -6,15 +6,20 @@ import logo_state
 
 
 image = None
+titlebgm = None
 
 def enter():
-    global image
+    global image, titlebgm
     image = load_image('Sprites/etc/startpage.png')
+    titlebgm = load_music('Sounds/BGM/Title_BGM.mp3')
+    titlebgm.set_volume(25)
+    titlebgm.play()
     pass
 
 def exit():
     global image
     del image
+    titlebgm.stop()
     pass
 
 def handle_events():

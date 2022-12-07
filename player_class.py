@@ -429,8 +429,8 @@ class Player:
             if self.bulletmod == 0 :  # 탄환 종류 선택
                 if play_state.tennis_mag > 0:
                     ball = Tennis(self.x + 50 * self.face_dir, self.y, self.face_dir)
-                    game_world.add_object(ball, 3) # 게임 월드에 탄환 추가
-                    game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:tennis')
+                    game_world.add_object(ball, 4) # 게임 월드에 탄환 추가
+                    game_world.add_collision_pairs(game_world.objects[4][-1], None, 'zombie:tennis')
                     self.fire_sound.play()
                     play_state.tennis_mag -= 1  # 보유 탄환 1 감소
                 else:
@@ -438,23 +438,23 @@ class Player:
             elif self.bulletmod == 1 :
                 if play_state.cola_mag > 0:
                     bottle = Cola(self.x + 70 * self.face_dir, self.y, self.face_dir)
-                    game_world.add_object(bottle, 3) # 게임 월드에 탄환 추가
-                    game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:cola')
+                    game_world.add_object(bottle, 4) # 게임 월드에 탄환 추가
+                    game_world.add_collision_pairs(game_world.objects[4][-1], None, 'zombie:cola')
                     self.fire_sound.play()
                     play_state.cola_mag -= 1
             elif self.bulletmod == 2:
                 if play_state.bowling_mag > 0:
                     bowlingball = Bowling(self.x + 70 * self.face_dir, self.y, self.face_dir)
-                    game_world.add_object(bowlingball, 3)  # 게임 월드에 탄환 추가
-                    game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bowling')
+                    game_world.add_object(bowlingball, 4)  # 게임 월드에 탄환 추가
+                    game_world.add_collision_pairs(game_world.objects[4][-1], None, 'zombie:bowling')
                     self.fire_sound.play()
                     play_state.bowling_mag -= 1
                 else:
                     print("총알 없음!")
         elif self.transform == 1:
             bullet = Bullet(self.x + 70 * self.face_dir, self.y, self.face_dir)
-            game_world.add_object(bullet, 3)  # 게임 월드에 탄환 추가
-            game_world.add_collision_pairs(game_world.objects[3][-1], None, 'zombie:bullet')
+            game_world.add_object(bullet, 4)  # 게임 월드에 탄환 추가
+            game_world.add_collision_pairs(game_world.objects[4][-1], None, 'zombie:bullet')
             self.bullet_sound.play()
 
     def get_bb(self):

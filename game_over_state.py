@@ -6,14 +6,21 @@ import game_world
 
 
 image = None
+timefont = None
+gameoverbgm = None
 
 def enter():
-    global image
+    global image, timefont, gameoverbgm
     image = load_image('Sprites/etc/gameover.png')
+    gameoverbgm = load_music('Sounds/BGM/GameOver.mp3')
+    gameoverbgm.set_volume(25)
+    gameoverbgm.play()
+    timefont = load_font('Fonts/154_Impact.ttf')
     pass
 
 def exit():
     game_world.clear()
+    gameoverbgm.stop()
     global image
     del image
 
@@ -23,6 +30,7 @@ def update():
 def draw():
    clear_canvas()
    image.draw(500,300)
+   timefont.draw(400, 300, f'YOU SURVIVED : {int(play_state.end - play_state.start)} SECONDS!', (255, 255, 255))
    update_canvas()
    pass
 
